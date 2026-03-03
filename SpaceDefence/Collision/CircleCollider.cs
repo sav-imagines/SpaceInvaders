@@ -8,15 +8,17 @@ namespace SpaceDefence
     {
         public float X;
         public float Y;
-        public Vector2 Center 
-        { 
-            get { 
-                return new Vector2(X, Y); 
-            } 
+        public Vector2 Center
+        {
+            get
+            {
+                return new Vector2(X, Y);
+            }
 
-            set { 
-                X = value.X; Y = value.Y; 
-            } 
+            set
+            {
+                X = value.X; Y = value.Y;
+            }
         }
         public float Radius;
 
@@ -28,8 +30,8 @@ namespace SpaceDefence
         /// <param name="radius">The radius of the circle</param>
         public CircleCollider(float x, float y, float radius)
         {
-            this.X = x; 
-            this.Y = y; 
+            this.X = x;
+            this.Y = y;
             this.Radius = radius;
         }
 
@@ -52,7 +54,7 @@ namespace SpaceDefence
         /// <returns>true if the coordinates are within the circle.</returns>
         public override bool Contains(Vector2 coordinates)
         {
-            return (Center-coordinates).Length() < Radius;
+            return (Center - coordinates).Length() < Radius;
         }
 
         /// <summary>
@@ -62,7 +64,7 @@ namespace SpaceDefence
         /// <returns>true there is any overlap between the two Circles.</returns>
         public override bool Intersects(CircleCollider other)
         {
-            // TODO Implement
+            // TODO: Implement
             return false;
         }
 
@@ -74,8 +76,8 @@ namespace SpaceDefence
         /// <returns>true there is any overlap between the Circle and the Rectangle.</returns>
         public override bool Intersects(RectangleCollider other)
         {
-            // TODO Implement
-            return  false;
+            // TODO: Implement
+            return false;
         }
         /// <summary>
         /// Gets whether or not the Circle intersects the Line

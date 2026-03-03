@@ -11,9 +11,9 @@ namespace SpaceDefence
         private Texture2D _texture;
         private float playerClearance = 100;
 
-        public Supply() 
+        public Supply()
         {
-            
+
         }
 
         public override void Load(ContentManager content)
@@ -36,7 +36,7 @@ namespace SpaceDefence
         public void RandomMove()
         {
             GameManager gm = GameManager.GetGameManager();
-            _rectangleCollider.shape.Location = (gm.RandomScreenLocation() - _rectangleCollider.shape.Size.ToVector2()/2).ToPoint();
+            _rectangleCollider.shape.Location = (gm.RandomScreenLocation() - _rectangleCollider.shape.Size.ToVector2() / 2).ToPoint();
 
             Vector2 centerOfPlayer = gm.Player.GetPosition().Center.ToVector2();
             while ((_rectangleCollider.shape.Center.ToVector2() - centerOfPlayer).Length() < playerClearance)

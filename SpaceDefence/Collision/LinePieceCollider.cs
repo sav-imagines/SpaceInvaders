@@ -1,6 +1,7 @@
 ﻿using System;
 using SpaceDefence.Collision;
 using Microsoft.Xna.Framework;
+using System.Diagnostics;
 
 namespace SpaceDefence
 {
@@ -14,13 +15,15 @@ namespace SpaceDefence
         /// <summary>
         /// The length of the LinePiece, changing the length moves the end vector to adjust the length.
         /// </summary>
-        public float Length 
-        { 
-            get { 
-                return (End - Start).Length(); 
-            } 
-            set {
-                End = Start + GetDirection() * value; 
+        public float Length
+        {
+            get
+            {
+                return (End - Start).Length();
+            }
+            set
+            {
+                End = Start + GetDirection() * value;
             }
         }
 
@@ -65,7 +68,7 @@ namespace SpaceDefence
             Start = start;
             End = end;
         }
-        
+
         public LinePieceCollider(Vector2 start, Vector2 direction, float length)
         {
             Start = start;
@@ -79,8 +82,7 @@ namespace SpaceDefence
         /// <returns> The angle in radians between the the up vector and the direction to the cursor.</returns>
         public static float GetAngle(Vector2 direction)
         {
-            // TODO: Implement
-            return 0;
+            return direction.Angle();
         }
 
 
@@ -90,8 +92,9 @@ namespace SpaceDefence
         /// <returns> A Vector2 containing the direction from point1 to point2. </returns>
         public static Vector2 GetDirection(Vector2 point1, Vector2 point2)
         {
-            // TODO Implement, currently pointing up.
-            return -Vector2.UnitY;
+            Vector2 delta = point2 - point1;
+            delta.Normalize();
+            return delta;
         }
 
 
@@ -102,8 +105,8 @@ namespace SpaceDefence
         /// <returns>true there is any overlap between the Circle and the Line.</returns>
         public override bool Intersects(LinePieceCollider other)
         {
-            // TODO Implement.
-            return false;
+            // TODO: Implement.
+            return other.GetBoundingBox().Intersects(GetBoundingBox());
         }
 
 
@@ -114,8 +117,7 @@ namespace SpaceDefence
         /// <returns>true there is any overlap between the two Circles.</returns>
         public override bool Intersects(CircleCollider other)
         {
-            // TODO Implement hint, you can use the NearestPointOnLine function defined below.
-            return false;
+            return (this.NearestPointOnLine(other.Center) - other.Center).Length() < other.Radius;
         }
 
         /// <summary>
@@ -125,8 +127,10 @@ namespace SpaceDefence
         /// <returns>true there is any overlap between the Circle and the Rectangle.</returns>
         public override bool Intersects(RectangleCollider other)
         {
-            // TODO Implement
-            return false;
+            // TODO: Implement
+            if (!this.GetBoundingBox().Intersects(other.shape))
+                return false;
+            return other.Contains(NearestPointOnLine(other.shape.Center.ToVector2()));
         }
 
         /// <summary>
@@ -134,10 +138,17 @@ namespace SpaceDefence
         /// </summary>
         /// <param name="Other">The line to intersect with</param>
         /// <returns>A Vector2 with the point of intersection.</returns>
-        public Vector2 GetIntersection(LinePieceCollider Other)
+        public Vector2? GetIntersection(LinePieceCollider Other)
         {
-            // TODO Implement
-            return Vector2.Zero;
+            Vector2 r = End - Start;
+            Vector2 s = Other.End - Other.Start;
+            float rxs = r.X * s.Y - r.Y * s.X;
+            Vector2 cma = Other.Start - Start;
+            float t = (cma.X * s.Y - cma.Y * s.X) / rxs;
+            float u = (cma.X * r.Y - cma.Y * r.X) / rxs;
+
+            Debug.Assert(rxs != 0 && t >= 0 && t <= 1 && u >= 0 && u <= 1);
+            return Start + t * r;
         }
 
         /// <summary>
@@ -147,8 +158,19 @@ namespace SpaceDefence
         /// <returns>The nearest point on the line.</returns>
         public Vector2 NearestPointOnLine(Vector2 other)
         {
-            // TODO Implement
-            return Vector2.Zero;
+            Vector2 lineDir = End - Start;
+            float lengthSquared = lineDir.LengthSquared();
+
+            // If start and end are the same, return start
+            if (lengthSquared == 0) return Start;
+
+            // Project point onto line, clamped between 0 and 1
+            // t = ((C - A) . (B - A)) / |B - A|^2
+            float t = Vector2.Dot(other - Start, lineDir) / lengthSquared;
+            t = MathHelper.Clamp(t, 0f, 1f);
+
+            // Return the closest point
+            return Start + t * lineDir;
         }
 
         /// <summary>
@@ -160,7 +182,7 @@ namespace SpaceDefence
         {
             Point topLeft = new Point((int)Math.Min(Start.X, End.X), (int)Math.Min(Start.Y, End.Y));
             Point size = new Point((int)Math.Max(Start.X, End.X), (int)Math.Max(Start.Y, End.X)) - topLeft;
-            return new Rectangle(topLeft,size);
+            return new Rectangle(topLeft, size);
         }
 
 
