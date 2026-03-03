@@ -14,4 +14,10 @@ public static class Extensions
         newVec.Rotate(angle);
         return newVec;
     }
+    public static Vector2 Normalized(this Vector2 vec)
+    {
+        Vector2 newVec = new(vec.X, vec.Y);
+        newVec.Normalize();
+        return newVec;
+    }
 }

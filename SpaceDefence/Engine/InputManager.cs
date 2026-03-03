@@ -1,6 +1,4 @@
-﻿using System.Data;
-using System.Reflection.PortableExecutable;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework.Input;
 
 namespace SpaceDefence
 {
@@ -24,7 +22,7 @@ namespace SpaceDefence
             LastMouseState = Mouse.GetState();
 
         }
-        
+
         /// <summary>
         /// Updates the current and previous keyboard and mouse states
         /// </summary>
@@ -64,7 +62,7 @@ namespace SpaceDefence
         /// </summary>
         /// <param name="key">The key for which you wish to know the state</param>
         /// <returns>true if the key is currently down and was up in the previous step, otherwise false</returns>
-        public bool IsKeyPress(Keys key) 
+        public bool IsKeyPress(Keys key)
         {
             return CurrentKeyboardState.IsKeyDown(key) && LastKeyboardState.IsKeyUp(key);
         }

@@ -1,14 +1,18 @@
-﻿using System;
-using SpaceDefence.Collision;
+﻿using SpaceDefence.Collision;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace SpaceDefence
 {
     public class Ship : GameObject
     {
+        private const float DEAD_ZONE = 0.0f;
+        private const float TOP_SPEED = 500;
+        private const float ACCELERATION = 400;
+
         private Texture2D ship_body;
         private Texture2D base_turret;
         private Texture2D laser_turret;
@@ -19,9 +23,11 @@ namespace SpaceDefence
 
         private Vector2 velocity;
         private float rotation;
-        private float aimRotation;
-        private float TOP_SPEED;
-        private float acceleration;
+        private Vector2 turretAim;
+        private Vector2 aimRotation;
+
+        private float gasPedal;
+
 
         /// <summary>
         /// The player character
@@ -50,30 +56,29 @@ namespace SpaceDefence
         {
             base.HandleInput(inputManager);
             GamePadState controller = GamePad.GetState(PlayerIndex.One);
-            Vector2 aimVector = controller.ThumbSticks.Left;
-            target = (_rectangleCollider.shape.Center.ToVector2() + aimVector * 400).ToPoint();
-
-            if (controller.Buttons.A == ButtonState.Pressed)
+            if (controller.ThumbSticks.Right.Length() > DEAD_ZONE)
             {
-                Vector2 turretExit = _rectangleCollider.shape.Center.ToVector2() + aimVector * base_turret.Height / 2f;
+                turretAim = controller.ThumbSticks.Right;
+                turretAim = new(turretAim.X, -turretAim.Y);
+            }
+
+            if (controller.Triggers.Right > DEAD_ZONE)
+            {
+                target = (_rectangleCollider.shape.Center.ToVector2() + turretAim * 400).ToPoint();
+                Vector2 turretExit = _rectangleCollider.shape.Center.ToVector2() + turretAim * base_turret.Height / 2f;
                 if (buffTimer <= 0)
-                    GameManager.GetGameManager().AddGameObject(new Bullet(turretExit, aimVector, 150));
+                    GameManager.GetGameManager().AddGameObject(new Bullet(turretExit, turretAim, 150));
                 else
                     GameManager.GetGameManager().AddGameObject(new Laser(new LinePieceCollider(turretExit, target.ToVector2()), 400));
             }
 
-            if (controller.Triggers.Right > 0)
-                acceleration = controller.Triggers.Right;
+            gasPedal = controller.Triggers.Left;
+            if (controller.ThumbSticks.Left.Length() > DEAD_ZONE)
+            {
+                var thumbVec = controller.ThumbSticks.Left;
+                rotation = new Vector2(thumbVec.X, -thumbVec.Y).Angle() - (float)Math.PI / 2;
+            }
 
-            float aimAngle;
-            if (inputManager.IsKeyDown(Keys.A))
-                aimAngle = -(float)Math.PI * 0.5f;
-            else if (inputManager.IsKeyDown(Keys.D))
-                aimAngle = (float)Math.PI * 0.5f;
-            else if (inputManager.IsKeyDown(Keys.S))
-                aimAngle = -(float)Math.PI;
-            else
-                aimAngle = controller.ThumbSticks.Left.Angle();
         }
 
         public override void Update(GameTime gameTime)
@@ -83,30 +88,31 @@ namespace SpaceDefence
             if (buffTimer > 0)
                 buffTimer -= deltaTime;
 
-            rotation += aimRotation * deltaTime;
-            rotation = MathHelper.WrapAngle(rotation);
 
-            velocity += acceleration * velocity;
-            this._rectangleCollider.shape.Offset((Vector2.One * velocity * deltaTime).Rotated(rotation));
+            velocity += new Vector2((float)Math.Cos(rotation), (float)Math.Sin(rotation)) * ACCELERATION * gasPedal * deltaTime;
+            if (velocity.Length() > TOP_SPEED)
+                velocity = velocity.Normalized() * TOP_SPEED;
+            this._rectangleCollider.shape.Offset((Vector2.One * velocity * deltaTime));
 
             base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(ship_body, _rectangleCollider.shape, null, Color.White); //, rotation, _rectangleCollider.shape.Size.ToVector2(), Vector2.One, SpriteEffects.None, 0);
-            float aimAngle = GamePad.GetState(0).ThumbSticks.Left.Angle();
+            Rectangle shipLocation = ship_body.Bounds;
+            shipLocation.Location = _rectangleCollider.shape.Center;
+            spriteBatch.Draw(ship_body, shipLocation.Location.ToVector2(), null, Color.White, rotation + (float)Math.PI / 2, shipLocation.Size.ToVector2() / 2f, Vector2.One, SpriteEffects.None, 0);
             if (buffTimer <= 0)
             {
                 Rectangle turretLocation = base_turret.Bounds;
                 turretLocation.Location = _rectangleCollider.shape.Center;
-                spriteBatch.Draw(base_turret, turretLocation, null, Color.White, aimAngle, turretLocation.Size.ToVector2() / 2f, SpriteEffects.None, 0);
+                spriteBatch.Draw(base_turret, turretLocation, null, Color.White, turretAim.Angle(), turretLocation.Size.ToVector2() / 2f, SpriteEffects.None, 0);
             }
             else
             {
                 Rectangle turretLocation = laser_turret.Bounds;
                 turretLocation.Location = _rectangleCollider.shape.Center;
-                spriteBatch.Draw(laser_turret, turretLocation, null, Color.White, aimAngle, turretLocation.Size.ToVector2() / 2f, SpriteEffects.None, 0);
+                spriteBatch.Draw(laser_turret, turretLocation, null, Color.White, turretAim.Angle(), turretLocation.Size.ToVector2() / 2f, SpriteEffects.None, 0);
             }
             base.Draw(gameTime, spriteBatch);
         }
