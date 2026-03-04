@@ -1,9 +1,9 @@
-﻿using SpaceDefence.Collision;
+﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
+using SpaceDefence.Collision;
 
 namespace SpaceDefence
 {
@@ -29,7 +29,6 @@ namespace SpaceDefence
 
         private float gasPedal;
 
-
         /// <summary>
         /// The player character
         /// </summary>
@@ -47,11 +46,12 @@ namespace SpaceDefence
             base_turret = content.Load<Texture2D>("base_turret");
             laser_turret = content.Load<Texture2D>("laser_turret");
             _rectangleCollider.shape.Size = ship_body.Bounds.Size;
-            _rectangleCollider.shape.Location -= new Point(ship_body.Width / 2, ship_body.Height / 2);
+            _rectangleCollider.shape.Location -= new Point(
+                ship_body.Width / 2,
+                ship_body.Height / 2
+            );
             base.Load(content);
         }
-
-
 
         public override void HandleInput(InputManager inputManager)
         {
@@ -66,11 +66,19 @@ namespace SpaceDefence
             if (controller.Triggers.Right > DEAD_ZONE)
             {
                 target = (_rectangleCollider.shape.Center.ToVector2() + turretAim * 400).ToPoint();
-                Vector2 turretExit = _rectangleCollider.shape.Center.ToVector2() + turretAim * base_turret.Height / 2f;
+                Vector2 turretExit =
+                    _rectangleCollider.shape.Center.ToVector2()
+                    + turretAim * base_turret.Height / 2f;
                 if (buffTimer <= 0)
-                    GameManager.GetGameManager().AddGameObject(new Bullet(turretExit, turretAim, 1000));
+                    GameManager
+                        .GetGameManager()
+                        .AddGameObject(new Bullet(turretExit, turretAim, 1000));
                 else
-                    GameManager.GetGameManager().AddGameObject(new Laser(new LinePieceCollider(turretExit, target.ToVector2()), 400));
+                    GameManager
+                        .GetGameManager()
+                        .AddGameObject(
+                            new Laser(new LinePieceCollider(turretExit, target.ToVector2()), 400)
+                        );
             }
 
             if (inputManager.IsKeyDown(Keys.W))
@@ -90,7 +98,6 @@ namespace SpaceDefence
             else if (inputManager.IsKeyDown(Keys.S))
                 // S angles against the current velocity
                 rotationAim = velocity.Angle() + MathHelper.PiOver2;
-
         }
 
         public override void Update(GameTime gameTime)
@@ -100,8 +107,14 @@ namespace SpaceDefence
             if (buffTimer > 0)
                 buffTimer -= deltaTime;
 
-            rotation = rotation + (MathHelper.WrapAngle(rotationAim - rotation)) * deltaTime * ROTATION_SPEED;
-            velocity += new Vector2((float)Math.Cos(rotation), (float)Math.Sin(rotation)) * ACCELERATION * gasPedal * deltaTime;
+            rotation =
+                rotation
+                + (MathHelper.WrapAngle(rotationAim - rotation)) * deltaTime * ROTATION_SPEED;
+            velocity +=
+                new Vector2((float)Math.Cos(rotation), (float)Math.Sin(rotation))
+                * ACCELERATION
+                * gasPedal
+                * deltaTime;
             if (velocity.Length() > TOP_SPEED)
                 velocity = velocity.Normalized() * TOP_SPEED;
             this._rectangleCollider.shape.Offset((Vector2.One * velocity * deltaTime));
@@ -113,22 +126,49 @@ namespace SpaceDefence
         {
             Rectangle shipLocation = ship_body.Bounds;
             shipLocation.Location = _rectangleCollider.shape.Center;
-            spriteBatch.Draw(ship_body, shipLocation.Location.ToVector2(), null, Color.White, rotation + (float)Math.PI / 2, shipLocation.Size.ToVector2() / 2f, Vector2.One, SpriteEffects.None, 0);
+            spriteBatch.Draw(
+                ship_body,
+                shipLocation.Location.ToVector2(),
+                null,
+                Color.White,
+                rotation + (float)Math.PI / 2,
+                shipLocation.Size.ToVector2() / 2f,
+                Vector2.One,
+                SpriteEffects.None,
+                0
+            );
             if (buffTimer <= 0)
             {
                 Rectangle turretLocation = base_turret.Bounds;
                 turretLocation.Location = _rectangleCollider.shape.Center;
-                spriteBatch.Draw(base_turret, turretLocation, null, Color.White, turretAim.Angle(), turretLocation.Size.ToVector2() / 2f, SpriteEffects.None, 0);
+                spriteBatch.Draw(
+                    base_turret,
+                    turretLocation,
+                    null,
+                    Color.White,
+                    turretAim.Angle(),
+                    turretLocation.Size.ToVector2() / 2f,
+                    SpriteEffects.None,
+                    0
+                );
             }
             else
             {
                 Rectangle turretLocation = laser_turret.Bounds;
                 turretLocation.Location = _rectangleCollider.shape.Center;
-                spriteBatch.Draw(laser_turret, turretLocation, null, Color.White, turretAim.Angle(), turretLocation.Size.ToVector2() / 2f, SpriteEffects.None, 0);
+                spriteBatch.Draw(
+                    laser_turret,
+                    turretLocation,
+                    null,
+                    Color.White,
+                    turretAim.Angle(),
+                    turretLocation.Size.ToVector2() / 2f,
+                    SpriteEffects.None,
+                    0
+                );
             }
             base.Draw(gameTime, spriteBatch);
         }
-
 
         public void Buff()
         {
@@ -142,7 +182,11 @@ namespace SpaceDefence
 
         public void ResetPosition()
         {
-            _rectangleCollider.shape.Location = GameManager.GetGameManager().RandomScreenLocation().ToPoint();
+            _rectangleCollider.shape.Location = GameManager
+                .GetGameManager()
+                .RandomScreenLocation()
+                .ToPoint();
+            velocity = Vector2.Zero;
         }
     }
 }

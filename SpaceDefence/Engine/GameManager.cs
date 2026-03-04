@@ -75,6 +75,8 @@ namespace SpaceDefence
                 isDead = false;
                 Player.ResetPosition();
             }
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed)
+                Player.ResetPosition();
         }
 
         public void CheckCollision()
@@ -129,9 +131,10 @@ namespace SpaceDefence
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            Camera.CenterCameraToWorldPosition(Player.GetPosition().Location.ToVector2());
             spriteBatch.Begin(
                 samplerState: SamplerState.PointClamp,
-                transformMatrix: Camera.GetScreenSpaceMatrix(GetScreenDimensions())
+                transformMatrix: Camera.GetScreenSpaceMatrix()
             );
             var screen = Game.GraphicsDevice.Viewport.Bounds;
             if (isDead)
