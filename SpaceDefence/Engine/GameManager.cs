@@ -132,11 +132,11 @@ namespace SpaceDefence
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             Camera.CenterCameraToWorldPosition(Player.GetPosition().Location.ToVector2());
+            var screen = Game.GraphicsDevice.Viewport.Bounds;
             spriteBatch.Begin(
                 samplerState: SamplerState.PointClamp,
-                transformMatrix: Camera.GetScreenSpaceMatrix()
+                transformMatrix: Camera.GetScreenSpaceMatrix(screen)
             );
-            var screen = Game.GraphicsDevice.Viewport.Bounds;
             if (isDead)
             {
                 string gameOverText = "GAME OVER";
