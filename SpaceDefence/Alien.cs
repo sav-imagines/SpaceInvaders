@@ -6,10 +6,11 @@ namespace SpaceDefence
 {
     internal class Alien : GameObject
     {
+        private float TOP_SPEED = 500;
         private CircleCollider _circleCollider;
         private Texture2D _texture;
         private float playerClearance = 100;
-        private float speed = 10;
+        private float speed = 150;
 
         public Alien()
         {
@@ -30,7 +31,7 @@ namespace SpaceDefence
             if (other is Ship player)
                 GameManager.GetGameManager().Death();
             RandomMove();
-            speed += 10;
+            speed = speed > TOP_SPEED ? TOP_SPEED : speed + 30;
             base.OnCollision(other);
         }
 

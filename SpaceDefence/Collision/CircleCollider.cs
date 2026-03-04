@@ -78,10 +78,10 @@ namespace SpaceDefence
         {
             // TODO: Implement
             var aabb = other.shape;
-            if (Center.X > aabb.Left && Center.X < aabb.Right)
-                return (aabb.Center.Y - Center.Y < aabb.Height / 2 + Radius);
-            else if (Center.Y > aabb.Top && Center.Y < aabb.Bottom)
-                return (aabb.Center.X - Center.X < aabb.Width / 2 + Radius);
+            if (aabb.Left < Center.X && Center.X < aabb.Right)
+                return (Math.Abs(aabb.Center.Y - Center.Y) < aabb.Height / 2 + Radius);
+            else if (aabb.Top < Center.Y && Center.Y < aabb.Bottom)
+                return (Math.Abs(aabb.Center.X - Center.X) < aabb.Width / 2 + Radius);
             else
                 return false;
         }

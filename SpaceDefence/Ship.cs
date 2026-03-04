@@ -59,7 +59,7 @@ namespace SpaceDefence
             GamePadState controller = GamePad.GetState(PlayerIndex.One);
             if (controller.ThumbSticks.Right.Length() > DEAD_ZONE)
             {
-                turretAim = controller.ThumbSticks.Right;
+                turretAim = controller.ThumbSticks.Right.Normalized();
                 turretAim = new(turretAim.X, -turretAim.Y);
             }
 
@@ -68,7 +68,7 @@ namespace SpaceDefence
                 target = (_rectangleCollider.shape.Center.ToVector2() + turretAim * 400).ToPoint();
                 Vector2 turretExit = _rectangleCollider.shape.Center.ToVector2() + turretAim * base_turret.Height / 2f;
                 if (buffTimer <= 0)
-                    GameManager.GetGameManager().AddGameObject(new Bullet(turretExit, turretAim, 150));
+                    GameManager.GetGameManager().AddGameObject(new Bullet(turretExit, turretAim, 1000));
                 else
                     GameManager.GetGameManager().AddGameObject(new Laser(new LinePieceCollider(turretExit, target.ToVector2()), 400));
             }

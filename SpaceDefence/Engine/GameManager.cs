@@ -62,8 +62,12 @@ namespace SpaceDefence
             }
             // reset if + or space is pressed
             if (isDead && (inputManager.IsKeyDown(Keys.Space) || GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed))
+            {
                 isDead = false;
+                Player.ResetPosition();
+            }
         }
+
         public void CheckCollision()
         {
             // Checks once for every pair of 2 GameObjects if the collide.
@@ -88,6 +92,8 @@ namespace SpaceDefence
             // Handle input
             HandleInput(InputManager);
 
+            if (isDead) // the game stops running during the death screen, save for handling input
+                return;
 
             // Update
             foreach (GameObject gameObject in _gameObjects)
