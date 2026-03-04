@@ -1,14 +1,12 @@
 ﻿using System;
-using SpaceDefence.Collision;
-using Microsoft.Xna.Framework;
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
+using SpaceDefence.Collision;
 
 namespace SpaceDefence
 {
-
     public class LinePieceCollider : Collider, IEquatable<LinePieceCollider>
     {
-
         public Vector2 Start;
         public Vector2 End;
 
@@ -17,14 +15,8 @@ namespace SpaceDefence
         /// </summary>
         public float Length
         {
-            get
-            {
-                return (End - Start).Length();
-            }
-            set
-            {
-                End = Start + GetDirection() * value;
-            }
+            get { return (End - Start).Length(); }
+            set { End = Start + GetDirection() * value; }
         }
 
         /// <summary>
@@ -32,11 +24,7 @@ namespace SpaceDefence
         /// </summary>
         public float StandardA
         {
-            get
-            {
-                // TODO: Implement
-                return End.Y - Start.Y;
-            }
+            get { return End.Y - Start.Y; }
         }
 
         /// <summary>
@@ -44,11 +32,7 @@ namespace SpaceDefence
         /// </summary>
         public float StandardB
         {
-            get
-            {
-                // TODO: Implement
-                return End.X - Start.X;
-            }
+            get { return End.X - Start.X; }
         }
 
         /// <summary>
@@ -56,11 +40,7 @@ namespace SpaceDefence
         /// </summary>
         public float StandardC
         {
-            get
-            {
-                // TODO: Implement
-                return Start.X * End.Y - End.X * Start.Y;
-            }
+            get { return Start.X * End.Y - End.X * Start.Y; }
         }
 
         public LinePieceCollider(Vector2 start, Vector2 end)
@@ -85,7 +65,6 @@ namespace SpaceDefence
             return direction.Angle();
         }
 
-
         /// <summary>
         /// Calculates the normalized vector pointing from point1 to point2
         /// </summary>
@@ -97,7 +76,6 @@ namespace SpaceDefence
             return delta;
         }
 
-
         /// <summary>
         /// Gets whether or not the Line intersects another Line
         /// </summary>
@@ -105,10 +83,9 @@ namespace SpaceDefence
         /// <returns>true there is any overlap between the Circle and the Line.</returns>
         public override bool Intersects(LinePieceCollider other)
         {
-            // TODO: Implement.
-            return other.GetBoundingBox().Intersects(GetBoundingBox());
+            float divisor = (this.StandardA * other.StandardB - other.StandardA * this.StandardB);
+            return divisor != 0;
         }
-
 
         /// <summary>
         /// Gets whether or not the line intersects a Circle.
@@ -127,7 +104,6 @@ namespace SpaceDefence
         /// <returns>true there is any overlap between the Circle and the Rectangle.</returns>
         public override bool Intersects(RectangleCollider other)
         {
-            // TODO: Implement
             if (!this.GetBoundingBox().Intersects(other.shape))
                 return false;
             return other.Contains(NearestPointOnLine(other.shape.Center.ToVector2()));
@@ -140,15 +116,12 @@ namespace SpaceDefence
         /// <returns>A Vector2 with the point of intersection.</returns>
         public Vector2? GetIntersection(LinePieceCollider Other)
         {
-            Vector2 r = End - Start;
-            Vector2 s = Other.End - Other.Start;
-            float rxs = r.X * s.Y - r.Y * s.X;
-            Vector2 cma = Other.Start - Start;
-            float t = (cma.X * s.Y - cma.Y * s.X) / rxs;
-            float u = (cma.X * r.Y - cma.Y * r.X) / rxs;
-
-            Debug.Assert(rxs != 0 && t >= 0 && t <= 1 && u >= 0 && u <= 1);
-            return Start + t * r;
+            float divisor = (this.StandardA * Other.StandardB - Other.StandardA * this.StandardB);
+            Debug.Assert(divisor != 0);
+            return new(
+                (StandardB * Other.StandardC - Other.StandardB * StandardC) / divisor,
+                (StandardC * Other.StandardA - Other.StandardC * StandardA) / divisor
+            );
         }
 
         /// <summary>
@@ -162,7 +135,8 @@ namespace SpaceDefence
             float lengthSquared = lineDir.LengthSquared();
 
             // If start and end are the same, return start
-            if (lengthSquared == 0) return Start;
+            if (lengthSquared == 0)
+                return Start;
 
             // Project point onto line, clamped between 0 and 1
             // t = ((C - A) . (B - A)) / |B - A|^2
@@ -181,10 +155,10 @@ namespace SpaceDefence
         public override Rectangle GetBoundingBox()
         {
             Point topLeft = new Point((int)Math.Min(Start.X, End.X), (int)Math.Min(Start.Y, End.Y));
-            Point size = new Point((int)Math.Max(Start.X, End.X), (int)Math.Max(Start.Y, End.X)) - topLeft;
+            Point size =
+                new Point((int)Math.Max(Start.X, End.X), (int)Math.Max(Start.Y, End.X)) - topLeft;
             return new Rectangle(topLeft, size);
         }
-
 
         /// <summary>
         /// Gets whether or not the provided coordinates lie on the line.
@@ -193,9 +167,7 @@ namespace SpaceDefence
         /// <returns>true if the coordinates are within the circle.</returns>
         public override bool Contains(Vector2 coordinates)
         {
-            // TODO: Implement
-
-            return false;
+            return StandardA * coordinates.X + StandardB * coordinates.Y + StandardC == 0;
         }
 
         public bool Equals(LinePieceCollider other)
@@ -212,7 +184,6 @@ namespace SpaceDefence
             return GetDirection(point1.ToVector2(), point2.ToVector2());
         }
 
-
         /// <summary>
         /// Calculates the normalized vector pointing from point1 to point2
         /// </summary>
@@ -221,7 +192,6 @@ namespace SpaceDefence
         {
             return GetDirection(Start, End);
         }
-
 
         /// <summary>
         /// Should return the angle between a given direction and the up vector.
