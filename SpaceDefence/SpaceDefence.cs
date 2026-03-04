@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+
 namespace SpaceDefence
 {
     public class SpaceDefence : Game
@@ -17,7 +18,7 @@ namespace SpaceDefence
             // Set the size of the screen
             _graphics.PreferredBackBufferWidth = 2000;
             _graphics.PreferredBackBufferHeight = 1200;
-            
+
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -29,10 +30,13 @@ namespace SpaceDefence
             base.Initialize();
 
             // Place the player at the center of the screen
-            Ship player = new Ship(new Point(GraphicsDevice.Viewport.Width/2,GraphicsDevice.Viewport.Height/2));
+            Ship player = new Ship(
+                new Point(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2)
+            );
+            Camera camera = new Camera(_gameManager, GraphicsDevice.Viewport.Bounds);
 
             // Add the starting objects to the GameManager
-            _gameManager.Initialize(Content, this, player);
+            _gameManager.Initialize(Content, this, player, camera);
             _gameManager.AddGameObject(player);
             _gameManager.AddGameObject(new Alien());
             _gameManager.AddGameObject(new Supply());
@@ -46,7 +50,10 @@ namespace SpaceDefence
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (
+                GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
+                || Keyboard.GetState().IsKeyDown(Keys.Escape)
+            )
                 Exit();
             _gameManager.Update(gameTime);
             base.Update(gameTime);
@@ -59,8 +66,5 @@ namespace SpaceDefence
 
             base.Draw(gameTime);
         }
-
-
-
     }
 }

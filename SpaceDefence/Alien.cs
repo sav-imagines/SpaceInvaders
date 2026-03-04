@@ -6,16 +6,13 @@ namespace SpaceDefence
 {
     internal class Alien : GameObject
     {
-        private float TOP_SPEED = 500;
+        private float TOP_SPEED = 200;
         private CircleCollider _circleCollider;
         private Texture2D _texture;
         private float playerClearance = 100;
         private float speed = 150;
 
-        public Alien()
-        {
-
-        }
+        public Alien() { }
 
         public override void Load(ContentManager content)
         {
@@ -38,8 +35,12 @@ namespace SpaceDefence
         public override void Update(GameTime gameTime)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            Vector2 playerLocation = GameManager.GetGameManager().Player.GetPosition().Center.ToVector2();
-            _circleCollider.Center += (playerLocation - _circleCollider.Center).Normalized() * speed * deltaTime;
+            Vector2 playerLocation = GameManager
+                .GetGameManager()
+                .Player.GetPosition()
+                .Center.ToVector2();
+            _circleCollider.Center +=
+                (playerLocation - _circleCollider.Center).Normalized() * speed * deltaTime;
         }
 
         public void RandomMove()
