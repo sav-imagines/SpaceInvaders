@@ -3,17 +3,20 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace SpaceDefence
 {
     public class GameManager
     {
+        private bool isDead = false;
         private static GameManager gameManager;
 
         private List<GameObject> _gameObjects;
         private List<GameObject> _toBeRemoved;
         private List<GameObject> _toBeAdded;
         private ContentManager _content;
+        private SpriteFont font;
 
         public Random RNG { get; private set; }
         public Ship Player { get; private set; }
@@ -44,6 +47,7 @@ namespace SpaceDefence
 
         public void Load(ContentManager content)
         {
+            font = content.Load<SpriteFont>("PixelFont");
             foreach (GameObject gameObject in _gameObjects)
             {
                 gameObject.Load(content);
@@ -56,8 +60,10 @@ namespace SpaceDefence
             {
                 gameObject.HandleInput(this.InputManager);
             }
+            // reset if + or space is pressed
+            if (isDead && (inputManager.IsKeyDown(Keys.Space) || GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed))
+                isDead = false;
         }
-
         public void CheckCollision()
         {
             // Checks once for every pair of 2 GameObjects if the collide.
@@ -109,10 +115,27 @@ namespace SpaceDefence
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin();
-            foreach (GameObject gameObject in _gameObjects)
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            var screen = Game.GraphicsDevice.Viewport.Bounds;
+            if (isDead)
             {
-                gameObject.Draw(gameTime, spriteBatch);
+                string gameOverText = "GAME OVER";
+                Vector2 goTextSize = font.MeasureString(gameOverText);
+                Vector2 posA = screen.Center.ToVector2() - goTextSize * 2;
+                spriteBatch.DrawString(font, gameOverText, posA, Color.White, 0, Vector2.Zero, Vector2.One * 4, SpriteEffects.None, 0);
+                string outputB = "Press  spacebar  or (A)  to  continue.";
+                Vector2 sizeB = font.MeasureString(outputB);
+                Vector2 posB = screen.Center.ToVector2() - sizeB * 2 + (sizeB * 3 * Vector2.UnitY); //screen.Center.ToVector2() - 0.5f * Vector2.UnitX * font.MeasureString(outputB) + Vector2.UnitY * sizeA * 2;
+                spriteBatch.DrawString(font, outputB, posB, Color.White, 0, Vector2.Zero, Vector2.One * 4, SpriteEffects.None, 0);
+                spriteBatch.End();
+                return;
+            }
+            else
+            {
+                foreach (GameObject gameObject in _gameObjects)
+                {
+                    gameObject.Draw(gameTime, spriteBatch);
+                }
             }
             spriteBatch.End();
         }
@@ -147,6 +170,11 @@ namespace SpaceDefence
             return new Vector2(
                 RNG.Next(0, Game.GraphicsDevice.Viewport.Width),
                 RNG.Next(0, Game.GraphicsDevice.Viewport.Height));
+        }
+
+        public void Death()
+        {
+            isDead = true;
         }
     }
 }

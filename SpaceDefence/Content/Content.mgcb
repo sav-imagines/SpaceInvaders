@@ -85,6 +85,11 @@
 /processorParam:TextureFormat=Color
 /build:Laser.png
 
+#begin PixelFont.spritefont
+/importer:
+/processor:
+/build:PixelFont.spritefont
+
 #begin ship_body.png
 /importer:TextureImporter
 /processor:TextureProcessor

@@ -12,6 +12,7 @@ namespace SpaceDefence
         private const float DEAD_ZONE = 0.0f;
         private const float TOP_SPEED = 500;
         private const float ACCELERATION = 400;
+        private const float ROTATION_SPEED = MathHelper.Tau;
 
         private Texture2D ship_body;
         private Texture2D base_turret;
@@ -24,7 +25,7 @@ namespace SpaceDefence
         private Vector2 velocity;
         private float rotation;
         private Vector2 turretAim;
-        private Vector2 aimRotation;
+        private float rotationAim; // the angle you are steering towards
 
         private float gasPedal;
 
@@ -72,12 +73,20 @@ namespace SpaceDefence
                     GameManager.GetGameManager().AddGameObject(new Laser(new LinePieceCollider(turretExit, target.ToVector2()), 400));
             }
 
-            gasPedal = controller.Triggers.Left;
+            if (inputManager.IsKeyDown(Keys.W))
+                gasPedal = 1;
+            else
+                gasPedal = controller.Triggers.Left;
+
             if (controller.ThumbSticks.Left.Length() > DEAD_ZONE)
             {
                 var thumbVec = controller.ThumbSticks.Left;
-                rotation = new Vector2(thumbVec.X, -thumbVec.Y).Angle() - (float)Math.PI / 2;
+                rotationAim = new Vector2(thumbVec.X, -thumbVec.Y).Angle() - MathHelper.PiOver2;
             }
+            else if (inputManager.IsKeyDown(Keys.A))
+                rotationAim = rotation - MathHelper.PiOver4;
+            else if (inputManager.IsKeyDown(Keys.D))
+                rotationAim = rotation + MathHelper.PiOver4;
 
         }
 
@@ -88,7 +97,7 @@ namespace SpaceDefence
             if (buffTimer > 0)
                 buffTimer -= deltaTime;
 
-
+            rotation = rotation + (MathHelper.WrapAngle(rotationAim - rotation)) * deltaTime * ROTATION_SPEED;
             velocity += new Vector2((float)Math.Cos(rotation), (float)Math.Sin(rotation)) * ACCELERATION * gasPedal * deltaTime;
             if (velocity.Length() > TOP_SPEED)
                 velocity = velocity.Normalized() * TOP_SPEED;
@@ -126,6 +135,11 @@ namespace SpaceDefence
         public Rectangle GetPosition()
         {
             return _rectangleCollider.shape;
+        }
+
+        public void ResetPosition()
+        {
+            _rectangleCollider.shape.Location = GameManager.GetGameManager().RandomScreenLocation().ToPoint();
         }
     }
 }

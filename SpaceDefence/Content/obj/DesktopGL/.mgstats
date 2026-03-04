@@ -1,0 +1,9 @@
+Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"/home/savannah/Repos/SpaceInvaders/SpaceDefence/Content/Alien.png","/home/savannah/Repos/SpaceInvaders/SpaceDefence/Content/bin/DesktopGL/Alien.xnb","TextureProcessor","Texture2DContent",7284,16469,0.1771514
+"/home/savannah/Repos/SpaceInvaders/SpaceDefence/Content/base_turret.png","/home/savannah/Repos/SpaceInvaders/SpaceDefence/Content/bin/DesktopGL/base_turret.xnb","TextureProcessor","Texture2DContent",1558,16469,0.0058814
+"/home/savannah/Repos/SpaceInvaders/SpaceDefence/Content/Bullet.png","/home/savannah/Repos/SpaceInvaders/SpaceDefence/Content/bin/DesktopGL/Bullet.xnb","TextureProcessor","Texture2DContent",3295,16469,0.0113829
+"/home/savannah/Repos/SpaceInvaders/SpaceDefence/Content/Crate.png","/home/savannah/Repos/SpaceInvaders/SpaceDefence/Content/bin/DesktopGL/Crate.xnb","TextureProcessor","Texture2DContent",7282,16469,0.0028465
+"/home/savannah/Repos/SpaceInvaders/SpaceDefence/Content/laser_turret.png","/home/savannah/Repos/SpaceInvaders/SpaceDefence/Content/bin/DesktopGL/laser_turret.xnb","TextureProcessor","Texture2DContent",2353,16469,0.0022782
+"/home/savannah/Repos/SpaceInvaders/SpaceDefence/Content/Laser.png","/home/savannah/Repos/SpaceInvaders/SpaceDefence/Content/bin/DesktopGL/Laser.xnb","TextureProcessor","Texture2DContent",125,341,0.0013567
+"/home/savannah/Repos/SpaceInvaders/SpaceDefence/Content/PixelFont.spritefont","/home/savannah/Repos/SpaceInvaders/SpaceDefence/Content/bin/DesktopGL/PixelFont.xnb","FontDescriptionProcessor","SpriteFontContent",2013,21538,0.2018152
+"/home/savannah/Repos/SpaceInvaders/SpaceDefence/Content/ship_body.png","/home/savannah/Repos/SpaceInvaders/SpaceDefence/Content/bin/DesktopGL/ship_body.xnb","TextureProcessor","Texture2DContent",3377,32853,0.0049157

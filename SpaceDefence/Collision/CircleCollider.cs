@@ -65,7 +65,7 @@ namespace SpaceDefence
         public override bool Intersects(CircleCollider other)
         {
             // TODO: Implement
-            return false;
+            return (this.Center - other.Center).Length() < other.Radius + this.Radius;
         }
 
 
@@ -77,8 +77,15 @@ namespace SpaceDefence
         public override bool Intersects(RectangleCollider other)
         {
             // TODO: Implement
-            return false;
+            var aabb = other.shape;
+            if (Center.X > aabb.Left && Center.X < aabb.Right)
+                return (aabb.Center.Y - Center.Y < aabb.Height / 2 + Radius);
+            else if (Center.Y > aabb.Top && Center.Y < aabb.Bottom)
+                return (aabb.Center.X - Center.X < aabb.Width / 2 + Radius);
+            else
+                return false;
         }
+
         /// <summary>
         /// Gets whether or not the Circle intersects the Line
         /// </summary>

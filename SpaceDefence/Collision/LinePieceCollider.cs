@@ -35,7 +35,7 @@ namespace SpaceDefence
             get
             {
                 // TODO: Implement
-                return 0;
+                return End.Y - Start.Y;
             }
         }
 
@@ -47,7 +47,7 @@ namespace SpaceDefence
             get
             {
                 // TODO: Implement
-                return 0;
+                return End.X - Start.X;
             }
         }
 
@@ -59,7 +59,7 @@ namespace SpaceDefence
             get
             {
                 // TODO: Implement
-                return 0;
+                return Start.X * End.Y - End.X * Start.Y;
             }
         }
 

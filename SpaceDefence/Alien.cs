@@ -9,10 +9,11 @@ namespace SpaceDefence
         private CircleCollider _circleCollider;
         private Texture2D _texture;
         private float playerClearance = 100;
+        private float speed = 10;
 
-        public Alien() 
+        public Alien()
         {
-            
+
         }
 
         public override void Load(ContentManager content)
@@ -26,8 +27,18 @@ namespace SpaceDefence
 
         public override void OnCollision(GameObject other)
         {
+            if (other is Ship player)
+                GameManager.GetGameManager().Death();
             RandomMove();
+            speed += 10;
             base.OnCollision(other);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Vector2 playerLocation = GameManager.GetGameManager().Player.GetPosition().Center.ToVector2();
+            _circleCollider.Center += (playerLocation - _circleCollider.Center).Normalized() * speed * deltaTime;
         }
 
         public void RandomMove()
@@ -45,7 +56,5 @@ namespace SpaceDefence
             spriteBatch.Draw(_texture, _circleCollider.GetBoundingBox(), Color.White);
             base.Draw(gameTime, spriteBatch);
         }
-
-
     }
 }
