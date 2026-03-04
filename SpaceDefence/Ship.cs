@@ -87,6 +87,9 @@ namespace SpaceDefence
                 rotationAim = rotation - MathHelper.PiOver4;
             else if (inputManager.IsKeyDown(Keys.D))
                 rotationAim = rotation + MathHelper.PiOver4;
+            else if (inputManager.IsKeyDown(Keys.S))
+                // S angles against the current velocity
+                rotationAim = velocity.Angle() + MathHelper.PiOver2;
 
         }
 
