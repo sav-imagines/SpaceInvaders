@@ -18,7 +18,7 @@ namespace SpaceDefence
         private Texture2D base_turret;
         private Texture2D laser_turret;
         private float buffTimer = 100;
-        private float buffDuration = 10f;
+        private float buffDuration = 0f;
         private RectangleCollider _rectangleCollider;
         private Point target;
 

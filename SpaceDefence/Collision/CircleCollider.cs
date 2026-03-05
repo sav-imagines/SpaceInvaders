@@ -1,6 +1,6 @@
 ﻿using System;
-using SpaceDefence.Collision;
 using Microsoft.Xna.Framework;
+using SpaceDefence.Collision;
 
 namespace SpaceDefence
 {
@@ -10,14 +10,11 @@ namespace SpaceDefence
         public float Y;
         public Vector2 Center
         {
-            get
-            {
-                return new Vector2(X, Y);
-            }
-
+            get { return new Vector2(X, Y); }
             set
             {
-                X = value.X; Y = value.Y;
+                X = value.X;
+                Y = value.Y;
             }
         }
         public float Radius;
@@ -46,7 +43,6 @@ namespace SpaceDefence
             this.Radius = radius;
         }
 
-
         /// <summary>
         /// Gets whether or not the provided coordinates lie within the bounds of this Circle.
         /// </summary>
@@ -68,7 +64,6 @@ namespace SpaceDefence
             return (this.Center - other.Center).Length() < other.Radius + this.Radius;
         }
 
-
         /// <summary>
         /// Gets whether or not the Circle intersects the Rectangle.
         /// </summary>
@@ -76,14 +71,15 @@ namespace SpaceDefence
         /// <returns>true there is any overlap between the Circle and the Rectangle.</returns>
         public override bool Intersects(RectangleCollider other)
         {
-            // TODO: Implement
             var aabb = other.shape;
             if (aabb.Left < Center.X && Center.X < aabb.Right)
                 return (Math.Abs(aabb.Center.Y - Center.Y) < aabb.Height / 2 + Radius);
             else if (aabb.Top < Center.Y && Center.Y < aabb.Bottom)
                 return (Math.Abs(aabb.Center.X - Center.X) < aabb.Width / 2 + Radius);
             else
-                return false;
+                return (
+                        (aabb.Size.ToVector2() / 2) - (Center - aabb.Center.ToVector2().Abs())
+                    ).Length() < Radius;
         }
 
         /// <summary>
@@ -103,7 +99,12 @@ namespace SpaceDefence
         /// <returns></returns>
         public override Rectangle GetBoundingBox()
         {
-            return new Rectangle((int)(X - Radius), (int)(Y - Radius), (int)(2 * Radius), (int)(2 * Radius));
+            return new Rectangle(
+                (int)(X - Radius),
+                (int)(Y - Radius),
+                (int)(2 * Radius),
+                (int)(2 * Radius)
+            );
         }
 
         public bool Equals(CircleCollider other)

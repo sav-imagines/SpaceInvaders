@@ -63,7 +63,7 @@ namespace SpaceDefence
             {
                 gameObject.HandleInput(this.InputManager);
             }
-            // reset if + or space is pressed
+            // reset if - or space is pressed
             if (
                 isDead
                 && (
