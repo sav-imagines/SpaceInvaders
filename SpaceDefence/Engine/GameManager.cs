@@ -18,7 +18,6 @@ namespace SpaceDefence
         private List<GameObject> _toBeRemoved;
         private List<GameObject> _toBeAdded;
         private ContentManager _content;
-        private SpriteFont font;
 
         public Random RNG { get; private set; }
         public Camera Camera { get; private set; }
@@ -52,8 +51,11 @@ namespace SpaceDefence
 
         public void Load(ContentManager content)
         {
-            font = content.Load<SpriteFont>("PixelFont");
             foreach (GameObject gameObject in _gameObjects)
+            {
+                gameObject.Load(content);
+            }
+            foreach (GameObject gameObject in GameStateMethods.Screens.Values)
             {
                 gameObject.Load(content);
             }
@@ -67,17 +69,14 @@ namespace SpaceDefence
             }
 
             if (
-                state.IsPlaying()
-                && (
-                    inputManager.IsKeyDown(Keys.Space)
-                    || GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed
-                )
+                !state.IsPlaying()
+                && (inputManager.IsKeyDown(Keys.Space) || inputManager.IsButtonPress(Buttons.A))
             )
             {
                 state = GameState.Playing;
                 Player.ResetPosition();
             }
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed)
+            if (inputManager.IsButtonPress(Buttons.Start))
                 Player.ResetPosition();
         }
 
@@ -139,51 +138,13 @@ namespace SpaceDefence
                 samplerState: SamplerState.PointClamp,
                 transformMatrix: Camera.GetScreenSpaceMatrix()
             );
-            // TODO: make switch statement
-            if (state == GameState.Gameover)
-            {
-                string outputA = "GAME OVER";
-                Vector2 sizeA = font.MeasureString(outputA) * SCALE;
-                Vector2 posA = Camera.ToWorldSpace(
-                    new Vector2(sizeA.X * -0.5f, -sizeA.Y * 2)
-                        + Camera.Viewport.Size.ToVector2() / 2
-                );
-                spriteBatch.DrawString(
-                    font,
-                    outputA,
-                    posA,
-                    Color.White,
-                    0,
-                    Vector2.Zero,
-                    Vector2.One * SCALE,
-                    SpriteEffects.None,
-                    0
-                );
-                float subtitleScale = SCALE * .7f;
-                string outputB = "Press  spacebar  or (A)  to  continue.";
-                Vector2 sizeB = font.MeasureString(outputB) * subtitleScale;
-                Vector2 posB = Camera.ToWorldSpace(
-                    new Vector2(sizeB.X * -0.5f, sizeB.Y * 2) + Camera.Viewport.Size.ToVector2() / 2
-                );
-                spriteBatch.DrawString(
-                    font,
-                    outputB,
-                    posB,
-                    Color.White,
-                    0,
-                    Vector2.Zero,
-                    Vector2.One * subtitleScale,
-                    SpriteEffects.None,
-                    0
-                );
-            }
-            else
-            {
+            if (state.IsPlaying())
                 foreach (GameObject gameObject in _gameObjects)
                 {
                     gameObject.Draw(gameTime, spriteBatch);
                 }
-            }
+            else
+                GameStateMethods.Screens[state].Draw(gameTime, spriteBatch);
             spriteBatch.End();
         }
 

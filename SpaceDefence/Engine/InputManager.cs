@@ -1,15 +1,18 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace SpaceDefence
 {
     public class InputManager
     {
+        // private Camera Camera = GameManager.GetGameManager().Camera;
+
         public KeyboardState LastKeyboardState { get; private set; }
         public KeyboardState CurrentKeyboardState { get; private set; }
         public MouseState LastMouseState { get; private set; }
         public MouseState CurrentMouseState { get; private set; }
-
-
+        public GamePadState LastGamePadState { get; private set; }
+        public GamePadState CurrentGamePadState { get; private set; }
 
         /// <summary>
         /// Keeps track of input states and contains methods to work with them.
@@ -20,7 +23,8 @@ namespace SpaceDefence
             CurrentKeyboardState = Keyboard.GetState();
             CurrentMouseState = Mouse.GetState();
             LastMouseState = Mouse.GetState();
-
+            LastGamePadState = GamePad.GetState(PlayerIndex.One);
+            LastGamePadState = GamePad.GetState(PlayerIndex.One);
         }
 
         /// <summary>
@@ -32,6 +36,8 @@ namespace SpaceDefence
             CurrentKeyboardState = Keyboard.GetState();
             LastMouseState = CurrentMouseState;
             CurrentMouseState = Mouse.GetState();
+            LastGamePadState = CurrentGamePadState;
+            CurrentGamePadState = GamePad.GetState(PlayerIndex.One);
         }
 
         /// <summary>
@@ -44,7 +50,6 @@ namespace SpaceDefence
             return CurrentKeyboardState.IsKeyDown(key);
         }
 
-
         /// <summary>
         /// Gets whether the <paramref name="key"/> is currently up.
         /// </summary>
@@ -54,8 +59,6 @@ namespace SpaceDefence
         {
             return CurrentKeyboardState.IsKeyUp(key);
         }
-
-
 
         /// <summary>
         /// Gets whether the <paramref name="key"/> was pressed in this frame.
@@ -67,16 +70,15 @@ namespace SpaceDefence
             return CurrentKeyboardState.IsKeyDown(key) && LastKeyboardState.IsKeyUp(key);
         }
 
-
         /// <summary>
         /// Gets whether the left mouse button was pressed in this frame.
         /// </summary>
         /// <returns>true if the button is currently down and was up in the previous step, otherwise false</returns>
         public bool LeftMousePress()
         {
-            return CurrentMouseState.LeftButton == ButtonState.Pressed && LastMouseState.LeftButton == ButtonState.Released;
+            return CurrentMouseState.LeftButton == ButtonState.Pressed
+                && LastMouseState.LeftButton == ButtonState.Released;
         }
-
 
         /// <summary>
         /// Gets whether the right mouse button was pressed in this frame.
@@ -84,7 +86,30 @@ namespace SpaceDefence
         /// <returns>true if the button is currently down and was up in the previous step, otherwise false</returns>
         public bool RightMousePress()
         {
-            return CurrentMouseState.RightButton == ButtonState.Pressed && LastMouseState.RightButton == ButtonState.Released;
+            return CurrentMouseState.RightButton == ButtonState.Pressed
+                && LastMouseState.RightButton == ButtonState.Released;
+        }
+
+        public bool LeftTriggerPress()
+        {
+            return CurrentGamePadState.Triggers.Left > 0 && LastGamePadState.Triggers.Left <= 0;
+        }
+
+        public bool RightTriggerPress()
+        {
+            return CurrentGamePadState.Triggers.Right > 0 && LastGamePadState.Triggers.Right <= 0;
+        }
+
+        public bool IsButtonPress(Buttons button)
+        {
+            return CurrentGamePadState.IsButtonDown(button) && LastGamePadState.IsButtonUp(button);
+        }
+
+        public Vector2 GetMouseScreenPosition()
+        {
+            return GameManager
+                .GetGameManager()
+                .Camera.ToWorldSpace(CurrentMouseState.Position.ToVector2());
         }
     }
 }
