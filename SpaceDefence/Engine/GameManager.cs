@@ -9,7 +9,9 @@ namespace SpaceDefence
 {
     public class GameManager
     {
-        private bool isDead = false;
+        public const int SCALE = 4;
+
+        private GameState state = GameState.Playing;
         private static GameManager gameManager;
 
         private List<GameObject> _gameObjects;
@@ -63,16 +65,16 @@ namespace SpaceDefence
             {
                 gameObject.HandleInput(this.InputManager);
             }
-            // reset if - or space is pressed
+
             if (
-                isDead
+                state.IsPlaying()
                 && (
                     inputManager.IsKeyDown(Keys.Space)
                     || GamePad.GetState(PlayerIndex.One).Buttons.A == ButtonState.Pressed
                 )
             )
             {
-                isDead = false;
+                state = GameState.Playing;
                 Player.ResetPosition();
             }
             if (GamePad.GetState(PlayerIndex.One).Buttons.Start == ButtonState.Pressed)
@@ -102,7 +104,7 @@ namespace SpaceDefence
             // Handle input
             HandleInput(InputManager);
 
-            if (isDead) // the game stops running during the death screen, save for handling input
+            if (!state.IsPlaying()) // the game stops running during the death screen, save for handling input
                 return;
 
             // Update
@@ -135,27 +137,34 @@ namespace SpaceDefence
             var screen = Game.GraphicsDevice.Viewport.Bounds;
             spriteBatch.Begin(
                 samplerState: SamplerState.PointClamp,
-                transformMatrix: Camera.GetScreenSpaceMatrix(screen)
+                transformMatrix: Camera.GetScreenSpaceMatrix()
             );
-            if (isDead)
+            // TODO: make switch statement
+            if (state == GameState.Gameover)
             {
-                string gameOverText = "GAME OVER";
-                Vector2 goTextSize = font.MeasureString(gameOverText);
-                Vector2 posA = screen.Center.ToVector2() - goTextSize * 2;
+                string outputA = "GAME OVER";
+                Vector2 sizeA = font.MeasureString(outputA) * SCALE;
+                Vector2 posA = Camera.ToWorldSpace(
+                    new Vector2(sizeA.X * -0.5f, -sizeA.Y * 2)
+                        + Camera.Viewport.Size.ToVector2() / 2
+                );
                 spriteBatch.DrawString(
                     font,
-                    gameOverText,
+                    outputA,
                     posA,
                     Color.White,
                     0,
                     Vector2.Zero,
-                    Vector2.One * 4,
+                    Vector2.One * SCALE,
                     SpriteEffects.None,
                     0
                 );
+                float subtitleScale = SCALE * .7f;
                 string outputB = "Press  spacebar  or (A)  to  continue.";
-                Vector2 sizeB = font.MeasureString(outputB);
-                Vector2 posB = screen.Center.ToVector2() - sizeB * 2 + (sizeB * 3 * Vector2.UnitY); //screen.Center.ToVector2() - 0.5f * Vector2.UnitX * font.MeasureString(outputB) + Vector2.UnitY * sizeA * 2;
+                Vector2 sizeB = font.MeasureString(outputB) * subtitleScale;
+                Vector2 posB = Camera.ToWorldSpace(
+                    new Vector2(sizeB.X * -0.5f, sizeB.Y * 2) + Camera.Viewport.Size.ToVector2() / 2
+                );
                 spriteBatch.DrawString(
                     font,
                     outputB,
@@ -163,12 +172,10 @@ namespace SpaceDefence
                     Color.White,
                     0,
                     Vector2.Zero,
-                    Vector2.One * 4,
+                    Vector2.One * subtitleScale,
                     SpriteEffects.None,
                     0
                 );
-                spriteBatch.End();
-                return;
             }
             else
             {
@@ -215,7 +222,7 @@ namespace SpaceDefence
 
         public void Death()
         {
-            isDead = true;
+            state = GameState.Gameover;
         }
 
         public Rectangle GetScreenDimensions() => Game.GraphicsDevice.Viewport.Bounds;

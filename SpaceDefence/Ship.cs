@@ -10,8 +10,8 @@ namespace SpaceDefence
     public class Ship : GameObject
     {
         private const float DEAD_ZONE = 0.0f;
-        private const float TOP_SPEED = 500;
-        private const float ACCELERATION = 400;
+        private const float TOP_SPEED = 1500;
+        private const float ACCELERATION = 600;
         private const float ROTATION_SPEED = MathHelper.Tau;
 
         private Texture2D ship_body;
