@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace SpaceDefence
@@ -107,9 +108,10 @@ namespace SpaceDefence
 
         public Vector2 GetMouseScreenPosition()
         {
-            return GameManager
-                .GetGameManager()
-                .Camera.ToWorldSpace(CurrentMouseState.Position.ToVector2());
+            Camera camera = GameManager.GetGameManager().Camera;
+            Vector2 screenSpaceMousePos = CurrentMouseState.Position.ToVector2();
+            Vector2 worldSpaceMousePos = camera.ToWorldSpace(screenSpaceMousePos);
+            return worldSpaceMousePos;
         }
     }
 }

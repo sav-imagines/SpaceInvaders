@@ -8,7 +8,7 @@ namespace SpaceDefence
     {
         private LinePieceCollider linePiece;
         private Texture2D sprite;
-        private double lifespan = 0.5 / 60;
+        private double lifespan = .25f;
 
         public Laser(LinePieceCollider linePiece)
         {

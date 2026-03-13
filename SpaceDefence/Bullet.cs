@@ -28,7 +28,7 @@ namespace SpaceDefence
         {
             base.Update(gameTime);
             _circleCollider.Center += _velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (!GameManager.GetGameManager().Camera.Viewport.Contains(_circleCollider.Center))
+            if (GameManager.GetGameManager().Camera.IsOnScreen(_circleCollider.Center))
                 GameManager.GetGameManager().RemoveGameObject(this);
         }
 

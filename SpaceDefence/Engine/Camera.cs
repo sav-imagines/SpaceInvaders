@@ -54,4 +54,9 @@ public class Camera
     {
         return Vector2.Transform(vec, GetScreenSpaceMatrix());
     }
+
+    public bool IsOnScreen(Vector2 worldSpacePos)
+    {
+        return Viewport.Contains(ToScreenSpace(worldSpacePos));
+    }
 }

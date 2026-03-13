@@ -10,9 +10,11 @@ namespace SpaceDefence
     public class Ship : GameObject
     {
         private const float DEAD_ZONE = 0.0f;
-        private const float TOP_SPEED = 1500;
-        private const float ACCELERATION = 600;
+        private const float TOP_SPEED = 500;
+        private const float ACCELERATION = 200;
         private const float ROTATION_SPEED = MathHelper.Tau;
+
+        private readonly Vector2 CORR = new Vector2(1, -1);
 
         private Texture2D ship_body;
         private Texture2D base_turret;
@@ -56,14 +58,17 @@ namespace SpaceDefence
         public override void HandleInput(InputManager inputManager)
         {
             base.HandleInput(inputManager);
-            GamePadState controller = GamePad.GetState(PlayerIndex.One);
-            if (controller.ThumbSticks.Right.Length() > DEAD_ZONE)
+            Vector2 rightStick = inputManager.CurrentGamePadState.ThumbSticks.Right;
+            if (rightStick.Length() > DEAD_ZONE)
             {
-                turretAim = controller.ThumbSticks.Right.Normalized();
-                turretAim = new(turretAim.X, -turretAim.Y);
+                turretAim = rightStick.Normalized() * CORR;
+            }
+            else
+            {
+                turretAim = (inputManager.GetMouseScreenPosition() - _rectangleCollider.shape.Center.ToVector2()).Normalized();
             }
 
-            if (controller.Triggers.Right > DEAD_ZONE)
+            if (inputManager.RightTriggerPress() || inputManager.LeftMousePress())
             {
                 target = (_rectangleCollider.shape.Center.ToVector2() + turretAim * 400).ToPoint();
                 Vector2 turretExit =
@@ -77,26 +82,27 @@ namespace SpaceDefence
                     GameManager
                         .GetGameManager()
                         .AddGameObject(
-                            new Laser(new LinePieceCollider(turretExit, target.ToVector2()), 400)
+                            new Laser(new LinePieceCollider(turretExit, target.ToVector2()), 700)
                         );
             }
 
             if (inputManager.IsKeyDown(Keys.W))
                 gasPedal = 1;
-            else
-                gasPedal = controller.Triggers.Left;
+            else if (inputManager.CurrentGamePadState.Triggers.Left > 0)
+                gasPedal = inputManager.CurrentGamePadState.Triggers.Left;
 
-            if (controller.ThumbSticks.Left.Length() > DEAD_ZONE)
+
+            Vector2 leftStick = inputManager.CurrentGamePadState.ThumbSticks.Left;
+            if (inputManager.CurrentGamePadState.ThumbSticks.Left.Length() > DEAD_ZONE)
             {
-                var thumbVec = controller.ThumbSticks.Left;
-                rotationAim = new Vector2(thumbVec.X, -thumbVec.Y).Angle() - MathHelper.PiOver2;
+                var thumbVec = leftStick;
+                rotationAim = (thumbVec * CORR).Angle() - MathHelper.PiOver2;
             }
             else if (inputManager.IsKeyDown(Keys.A))
                 rotationAim = rotation - MathHelper.PiOver4;
             else if (inputManager.IsKeyDown(Keys.D))
                 rotationAim = rotation + MathHelper.PiOver4;
-            else if (inputManager.IsKeyDown(Keys.S))
-                // S angles against the current velocity
+            else if (inputManager.IsKeyDown(Keys.S)) // S angles against the current velocity
                 rotationAim = velocity.Angle() + MathHelper.PiOver2;
         }
 
@@ -109,7 +115,7 @@ namespace SpaceDefence
 
             rotation =
                 rotation
-                + (MathHelper.WrapAngle(rotationAim - rotation)) * deltaTime * ROTATION_SPEED;
+                + MathHelper.WrapAngle(rotationAim - rotation) * deltaTime * ROTATION_SPEED;
             velocity +=
                 new Vector2((float)Math.Cos(rotation), (float)Math.Sin(rotation))
                 * ACCELERATION
@@ -117,7 +123,7 @@ namespace SpaceDefence
                 * deltaTime;
             if (velocity.Length() > TOP_SPEED)
                 velocity = velocity.Normalized() * TOP_SPEED;
-            this._rectangleCollider.shape.Offset((Vector2.One * velocity * deltaTime));
+            this._rectangleCollider.shape.Offset(Vector2.One * velocity * deltaTime);
 
             base.Update(gameTime);
         }
