@@ -1,4 +1,3 @@
-using System;
 using Microsoft.Xna.Framework;
 
 namespace SpaceDefence;
@@ -18,7 +17,7 @@ public class Camera
 
     public Matrix GetScreenSpaceMatrix()
     {
-        // return Matrix.Invert(Matrix.Identity);
+        // return Matrix.Identity;
         // return Matrix.CreateOrthographicOffCenter(Viewport, 0, 1);
         // DOES NOT WORK AFTER MOVING
 
@@ -45,18 +44,19 @@ public class Camera
         // Viewport = new Rectangle((coordinates - (Viewport.Size.ToVector2() / 2)).ToPoint(), Viewport.Size);
     }
 
-    public Vector2 ToWorldSpace(Vector2 vec)
+    public Vector2 ToScreenSpace(Vector2 vec)
     {
         return Vector2.Transform(vec, Matrix.Invert(GetScreenSpaceMatrix()));
     }
 
-    public Vector2 ToScreenSpace(Vector2 vec)
+    public Vector2 ToWorldSpace(Vector2 vec)
     {
         return Vector2.Transform(vec, GetScreenSpaceMatrix());
     }
 
     public bool IsOnScreen(Vector2 worldSpacePos)
     {
-        return Viewport.Contains(ToScreenSpace(worldSpacePos));
+        Rectangle ScreenSpaceRect = new Rectangle(ToScreenSpace(new Vector2(0, 0)).ToPoint(), Viewport.Size);
+        return ScreenSpaceRect.Contains(worldSpacePos);
     }
 }

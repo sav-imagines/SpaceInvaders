@@ -133,17 +133,21 @@ namespace SpaceDefence
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             Camera.CenterCameraToWorldPosition(Player.GetPosition().Location.ToVector2());
-            var screen = Game.GraphicsDevice.Viewport.Bounds;
             spriteBatch.Begin(
-                samplerState: SamplerState.PointClamp,
-                transformMatrix: Camera.GetScreenSpaceMatrix()
-            );
-            if (state.IsPlaying())
-                foreach (GameObject gameObject in _gameObjects)
-                {
-                    gameObject.Draw(gameTime, spriteBatch);
-                }
-            else
+                    samplerState: SamplerState.PointClamp,
+                    transformMatrix: Camera.GetScreenSpaceMatrix()
+                    );
+
+            // DrawRectangle(new Rectangle(new Point(0, 0), Camera.Viewport.Size), new Color(Color.Red, 100), spriteBatch);
+            // DrawRectangle(Camera.Viewport, new Color(Color.Green, 100), spriteBatch);
+            // DrawRectangle(new Rectangle(Camera.ToScreenSpace(new Vector2(0, 0)).ToPoint(), Camera.Viewport.Size), new Color(Color.Blue, 5), spriteBatch);
+
+
+            foreach (GameObject gameObject in _gameObjects)
+            {
+                gameObject.Draw(gameTime, spriteBatch);
+            }
+            if (!state.IsPlaying())
                 GameStateMethods.Screens[state].Draw(gameTime, spriteBatch);
             spriteBatch.End();
         }
@@ -187,5 +191,11 @@ namespace SpaceDefence
         }
 
         public Rectangle GetScreenDimensions() => Game.GraphicsDevice.Viewport.Bounds;
+
+        public void DrawRectangle(Rectangle rect, Color color, SpriteBatch spriteBatch) {
+            var blackRectangle = new Texture2D(GameManager.GetGameManager().Game.GraphicsDevice, 1, 1);
+            blackRectangle.SetData(new[] {color});
+            spriteBatch.Draw(blackRectangle, rect, Color.White);
+        }
     }
 }

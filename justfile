@@ -2,7 +2,7 @@ run:
   dotnet run --project SpaceDefence
 
 build:
-  dotnet build --project SpaceDefence
+  dotnet build SpaceDefence
 
 test:
-  dotnet run --project SpaceDefence-Tests
+  dotnet test SpaceDefence-Tests

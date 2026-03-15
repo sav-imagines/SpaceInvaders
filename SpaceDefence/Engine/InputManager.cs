@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace SpaceDefence
@@ -110,7 +109,7 @@ namespace SpaceDefence
         {
             Camera camera = GameManager.GetGameManager().Camera;
             Vector2 screenSpaceMousePos = CurrentMouseState.Position.ToVector2();
-            Vector2 worldSpaceMousePos = camera.ToWorldSpace(screenSpaceMousePos);
+            Vector2 worldSpaceMousePos = camera.ToScreenSpace(screenSpaceMousePos);
             return worldSpaceMousePos;
         }
     }
