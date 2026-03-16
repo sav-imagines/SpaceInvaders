@@ -88,7 +88,7 @@ public class Ship : MovingObject
         buffTimer -= deltaTime;
 
         rotation = rotation + MathHelper.WrapAngle(rotationAim - rotation) * deltaTime * ROTATION_SPEED;
-        //Turret.Rotation = Turret.Rotation + MathHelper.WrapAngle(rotationAim - rotation) * deltaTime * ROTATION_SPEED;
+        Turret.Rotation += MathHelper.WrapAngle(rotationAim - rotation) * deltaTime * ROTATION_SPEED;
         Velocity +=
             new Vector2((float)Math.Cos(rotation), (float)Math.Sin(rotation))
             * ACCELERATION
