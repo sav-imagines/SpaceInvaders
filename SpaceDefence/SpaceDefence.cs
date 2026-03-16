@@ -14,11 +14,18 @@ public class SpaceDefence : Game
     {
         _graphics = new GraphicsDeviceManager(this);
         _graphics.IsFullScreen = true;
-        _graphics.GraphicsProfile = GraphicsProfile.Reach;
+        _graphics.PreferredBackBufferHeight = GraphicsAdapter
+            .DefaultAdapter
+            .CurrentDisplayMode
+            .Height;
+        _graphics.PreferredBackBufferWidth = GraphicsAdapter
+            .DefaultAdapter
+            .CurrentDisplayMode
+            .Width;
+        _graphics.ApplyChanges();
+        // _graphics.GraphicsProfile = GraphicsProfile.Reach;
 
         // Set the size of the screen
-        _graphics.PreferredBackBufferWidth = 3840;
-        _graphics.PreferredBackBufferHeight = 2160;
 
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
