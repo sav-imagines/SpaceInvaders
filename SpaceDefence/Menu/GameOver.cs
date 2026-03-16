@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace SpaceDefence;
 
@@ -11,6 +12,15 @@ public class GameOverMenu : GameObject
 
     // private Camera Camera = GameManager.GetGameManager().Camera;
 
+    public override void HandleInput(InputManager inputManager)
+    {
+        base.HandleInput(inputManager);
+        if (inputManager.IsKeyPress(Keys.Space) || inputManager.IsButtonPress(Buttons.A))
+            GameManager.GetGameManager().State = GameState.Playing;
+        else if (inputManager.IsKeyPress(Keys.Escape))
+            GameManager.GetGameManager().Game.Exit();
+    }
+
     public override void Load(ContentManager content)
     {
         base.Load(content);
@@ -20,9 +30,14 @@ public class GameOverMenu : GameObject
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
         Camera Camera = GameManager.GetGameManager().Camera;
-        Rectangle ScreenSpaceRect = new Rectangle(Camera.ToScreenSpace(new Vector2(0, 0)).ToPoint(), Camera.Viewport.Size);
-        GameManager.GetGameManager().DrawRectangle(ScreenSpaceRect, new Color(0, 0, 0, 200), spriteBatch);
-        string outputA = "GAME OVER";
+        Rectangle ScreenSpaceRect = new Rectangle(
+            Camera.ToScreenSpace(new Vector2(0, 0)).ToPoint(),
+            Camera.Viewport.Size
+        );
+        GameManager
+            .GetGameManager()
+            .DrawRectangle(ScreenSpaceRect, new Color(0, 0, 0, 200), spriteBatch);
+        string outputA = "GAME  OVER";
         Vector2 sizeA = font.MeasureString(outputA) * FONT_SCALE;
         Vector2 posA = Camera.ToScreenSpace(
             new Vector2(sizeA.X * -0.5f, -sizeA.Y * 2) + Camera.Viewport.Size.ToVector2() / 2

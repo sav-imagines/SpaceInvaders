@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-
 using SpaceDefence;
 
 namespace SpaceDefence_Tests;
@@ -24,7 +23,10 @@ public sealed class CameraTests
         Camera camera = new Camera(GameManager.GetGameManager(), new Rectangle(0, 0, 128, 128));
         Vector2 position = camera.Viewport.Center.ToVector2();
         Assert.IsTrue(camera.Viewport.Contains(position));
-        camera.Viewport = new Rectangle(new Point(camera.Viewport.Width * 3, 0), camera.Viewport.Size);
+        camera.Viewport = new Rectangle(
+            new Point(camera.Viewport.Width * 3, 0),
+            camera.Viewport.Size
+        );
         Assert.IsFalse(camera.Viewport.Contains(position));
 
         camera = new Camera(GameManager.GetGameManager(), new Rectangle(20, 20, 128, 128));
@@ -34,7 +36,10 @@ public sealed class CameraTests
         Assert.IsTrue(camera.Viewport.Contains(new Vector2(21, 21)));
 
         // simulate a moved camera, taking a position relative to it, and see if it's in bounds now
-        camera = new Camera(GameManager.GetGameManager(), new Rectangle(new Point(500, 500), camera.Viewport.Size));
+        camera = new Camera(
+            GameManager.GetGameManager(),
+            new Rectangle(new Point(500, 500), camera.Viewport.Size)
+        );
 
         // take a position relative to camera and attempt to transform into world space
         Vector2 newPosition = camera.ToWorldSpace(camera.Viewport.Size.ToVector2() / 2);

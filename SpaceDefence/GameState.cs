@@ -12,7 +12,10 @@ public enum GameState
 
 public static class GameStateMethods
 {
-    public static Dictionary<GameState, GameObject> Screens = new Dictionary<GameState, GameObject>(
+    public static readonly Dictionary<GameState, GameObject> Screens = new Dictionary<
+        GameState,
+        GameObject
+    >(
         collection: new List<KeyValuePair<GameState, GameObject>>
         {
             new KeyValuePair<GameState, GameObject>(GameState.Gameover, new GameOverMenu()),

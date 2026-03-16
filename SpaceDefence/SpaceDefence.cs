@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace SpaceDefence;
 
@@ -58,11 +57,6 @@ public class SpaceDefence : Game
 
     protected override void Update(GameTime gameTime)
     {
-        if (
-            GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
-            || Keyboard.GetState().IsKeyDown(Keys.Escape)
-        )
-            Exit();
         _gameManager.Update(gameTime);
         base.Update(gameTime);
     }

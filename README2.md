@@ -21,7 +21,7 @@ Implement the following functionality:
 
 #### Animations:
 - [ ] Implement a class that can play an animation using a sprite sheet. (0.5p)
-- [ ] It should at least be possible to adjust the speed of the animation and whether or not it loops in the class.
+      It should at least be possible to adjust the speed of the animation and whether or not it loops in the class.
 - [ ] Whenever a player or an alien dies, play an explosion animation (0.5p)
 
 #### Game Goal (HUD):

@@ -18,7 +18,7 @@ namespace SpaceDefence
         private List<GameObject> _toBeAdded;
         private ContentManager _content;
 
-        public GameState State {get; set; } = GameState.Mainmenu;
+        public GameState State { get; set; } = GameState.Paused;
 
         public Random RNG { get; private set; }
         public Camera Camera { get; private set; }
@@ -64,27 +64,26 @@ namespace SpaceDefence
 
         public void HandleInput(InputManager inputManager)
         {
-            foreach (GameObject gameObject in _gameObjects)
+            switch (State)
             {
-                gameObject.HandleInput(this.InputManager);
+                case GameState.Playing:
+                    if (
+                        inputManager.IsKeyPress(Keys.Escape)
+                        || inputManager.IsButtonPress(Buttons.A)
+                    )
+                    {
+                        State = GameState.Paused;
+                        return;
+                    }
+                    foreach (GameObject gameObject in _gameObjects)
+                    {
+                        gameObject.HandleInput(this.InputManager);
+                    }
+                    break;
+                default:
+                    GameStateMethods.Screens[State].HandleInput(inputManager);
+                    break;
             }
-
-            // if (inputManager.IsKeyDown(Keys.Escape) || inputManager.IsButtonPress(Buttons.Start))
-            //     if (!state.IsPlaying())
-            //         Game.Exit();
-            //     else
-            //         state = GameState.Paused;
-
-            if (
-                !State.IsPlaying()
-                && (inputManager.IsKeyDown(Keys.Space) || inputManager.IsButtonPress(Buttons.A))
-            )
-            {
-                State = GameState.Playing;
-                Player.ResetPosition();
-            }
-            if (inputManager.IsButtonPress(Buttons.Start))
-                Player.ResetPosition();
         }
 
         public void CheckCollision()
@@ -141,14 +140,18 @@ namespace SpaceDefence
         {
             Camera.CenterCameraToWorldPosition(Player.GetPosition().Location.ToVector2());
             spriteBatch.Begin(
-                    samplerState: SamplerState.PointClamp,
-                    transformMatrix: Camera.GetScreenSpaceMatrix()
-                    );
+                samplerState: SamplerState.PointClamp,
+                transformMatrix: Camera.GetScreenSpaceMatrix()
+            );
 
-            // DrawRectangle(new Rectangle(new Point(0, 0), Camera.Viewport.Size), new Color(Color.Red, 100), spriteBatch);
-            // DrawRectangle(Camera.Viewport, new Color(Color.Green, 100), spriteBatch);
-            // DrawRectangle(new Rectangle(Camera.ToScreenSpace(new Vector2(0, 0)).ToPoint(), Camera.Viewport.Size), new Color(Color.Blue, 5), spriteBatch);
-
+            DrawRectangle(
+                new Rectangle(
+                    Camera.ToScreenSpace(new Vector2(0, 0)).ToPoint(),
+                    Camera.Viewport.Size
+                ),
+                new Color(Color.Blue, 5),
+                spriteBatch
+            );
 
             foreach (GameObject gameObject in _gameObjects)
             {
@@ -199,10 +202,11 @@ namespace SpaceDefence
 
         public Rectangle GetScreenDimensions() => Game.GraphicsDevice.Viewport.Bounds;
 
-        public void DrawRectangle(Rectangle rect, Color color, SpriteBatch spriteBatch) {
-            var blackRectangle = new Texture2D(GameManager.GetGameManager().Game.GraphicsDevice, 1, 1);
-            blackRectangle.SetData(new[] {color});
-            spriteBatch.Draw(blackRectangle, rect, Color.White);
+        public void DrawRectangle(Rectangle rect, Color color, SpriteBatch spriteBatch)
+        {
+            var rectangle = new Texture2D(GameManager.GetGameManager().Game.GraphicsDevice, 1, 1);
+            rectangle.SetData(new[] { color });
+            spriteBatch.Draw(rectangle, rect, Color.White);
         }
     }
 }
