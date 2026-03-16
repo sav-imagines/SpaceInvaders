@@ -144,15 +144,6 @@ namespace SpaceDefence
                 transformMatrix: Camera.GetScreenSpaceMatrix()
             );
 
-            DrawRectangle(
-                new Rectangle(
-                    Camera.ToScreenSpace(new Vector2(0, 0)).ToPoint(),
-                    Camera.Viewport.Size
-                ),
-                new Color(Color.Blue, 5),
-                spriteBatch
-            );
-
             foreach (GameObject gameObject in _gameObjects)
             {
                 gameObject.Draw(gameTime, spriteBatch);
