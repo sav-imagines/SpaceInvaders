@@ -27,7 +27,6 @@ public class HeadsUpDisplay : GameObject {
         Vector2 center = camera.Viewport.Size.ToVector2() / 2;
         Vector2 playerLocation = GameManager.GetGameManager().Player.GetPosition().Center.ToVector2();
 
-        spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
         // for (float i = 0; i < 360; i++) {
         //     float angle = (i / MathHelper.Pi);
@@ -39,6 +38,5 @@ public class HeadsUpDisplay : GameObject {
                 spriteBatch.Draw(arrowTexture, center + direction * ARROW_DIST, null, Color.White, direction.Angle(), arrowTexture.Bounds.Center.ToVector2(), Vector2.One, SpriteEffects.None, 0);
             }
         }
-        spriteBatch.End();
     }
 }

@@ -160,10 +160,14 @@ namespace SpaceDefence
             {
                 gameObject.Draw(gameTime, spriteBatch);
             }
+            spriteBatch.End();
+
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            HUD.Draw(gameTime, spriteBatch);
+
             if (!State.IsPlaying())
                 GameStateMethods.Screens[State].Draw(gameTime, spriteBatch);
             spriteBatch.End();
-            HUD.Draw(gameTime, spriteBatch);
         }
 
         /// <summary>

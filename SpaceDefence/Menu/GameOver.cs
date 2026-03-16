@@ -30,18 +30,18 @@ public class GameOverMenu : GameObject
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
         Camera Camera = GameManager.GetGameManager().Camera;
+        Vector2 ScreenSize = Camera.Viewport.Size.ToVector2();
         Rectangle ScreenSpaceRect = new Rectangle(
-            Camera.ToScreenSpace(new Vector2(0, 0)).ToPoint(),
+            Point.Zero,
             Camera.Viewport.Size
         );
+
         GameManager
             .GetGameManager()
             .DrawRectangle(ScreenSpaceRect, new Color(0, 0, 0, 200), spriteBatch);
         string outputA = "GAME  OVER";
         Vector2 sizeA = font.MeasureString(outputA) * FONT_SCALE;
-        Vector2 posA = Camera.ToScreenSpace(
-            new Vector2(sizeA.X * -0.5f, -sizeA.Y * 2) + Camera.Viewport.Size.ToVector2() / 2
-        );
+        Vector2 posA = new Vector2(sizeA.X * -0.5f, -sizeA.Y * 2) + ScreenSize / 2;
         spriteBatch.DrawString(
             font,
             outputA,
@@ -56,9 +56,7 @@ public class GameOverMenu : GameObject
         float subtitleScale = FONT_SCALE * .7f;
         string outputB = "Press  spacebar  or (A)  to  continue.";
         Vector2 sizeB = font.MeasureString(outputB) * subtitleScale;
-        Vector2 posB = Camera.ToScreenSpace(
-            new Vector2(sizeB.X * -0.5f, sizeB.Y * 2) + Camera.Viewport.Size.ToVector2() / 2
-        );
+        Vector2 posB = new Vector2(sizeB.X * -0.5f, sizeB.Y * 2) + ScreenSize / 2;
         spriteBatch.DrawString(
             font,
             outputB,

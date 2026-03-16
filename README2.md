@@ -10,7 +10,7 @@ Implement the following functionality:
 
 #### Add a start and pause screen:
 - [ ] Add a start screen to the game from where the player can at least start or quit the game. (0.5p)
-- [ ] Add a pause screen from where the player can at least continue or quit the game. The game should still be visible in the background, but not be updated.  (0.5p)
+- [x] Add a pause screen from where the player can at least continue or quit the game. The game should still be visible in the background, but not be updated.  (0.5p)
 
 #### Expand the level:
 - [x] Create a camera class that follows the player as it moves around the level and expand the play area. (1 p)
