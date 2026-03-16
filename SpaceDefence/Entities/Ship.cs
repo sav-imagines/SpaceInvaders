@@ -7,12 +7,12 @@ using SpaceDefence.Collision;
 
 namespace SpaceDefence;
 
-public class Ship : GameObject
+public class Ship : MovingObject
 {
     private const float DEAD_ZONE = 0.0f;
     private const float TOP_SPEED = 500;
     private const float ACCELERATION = 400;
-    private const float ROTATION_SPEED = MathHelper.Tau;
+    private const float ROTATION_SPEED = MathHelper.Pi;
 
     private readonly Vector2 CORR = new Vector2(1, -1);
 
@@ -25,7 +25,6 @@ public class Ship : GameObject
     private RectangleCollider _rectangleCollider;
     private Point target;
 
-    public Vector2 Velocity {get; private set; }
     private float rotation;
     private Vector2 turretAim;
     private float rotationAim; // the angle you are steering towards
@@ -88,8 +87,8 @@ public class Ship : GameObject
         // Update the Buff timer
         buffTimer -= deltaTime;
 
-        rotation =
-            rotation + MathHelper.WrapAngle(rotationAim - rotation) * deltaTime * ROTATION_SPEED;
+        rotation = rotation + MathHelper.WrapAngle(rotationAim - rotation) * deltaTime * ROTATION_SPEED;
+        //Turret.Rotation = Turret.Rotation + MathHelper.WrapAngle(rotationAim - rotation) * deltaTime * ROTATION_SPEED;
         Velocity +=
             new Vector2((float)Math.Cos(rotation), (float)Math.Sin(rotation))
             * ACCELERATION

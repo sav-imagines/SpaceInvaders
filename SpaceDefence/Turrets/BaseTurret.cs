@@ -10,8 +10,10 @@ public class BaseTurret : GameObject
     public Vector2 RelativePosition { get; protected set; } = new(0, 0);
     public Texture2D Texture { get; protected set; }
 
-    public Vector2 Rotation { get; set; }
+    public float Rotation { get; set; }
+    public float AimRotation { get; set; }
 
+    public virtual float RotationSpeed {get; protected set; } = MathHelper.Pi * 1.5f;
     public virtual float CoolDown { get; protected set; } = 0.2f;
 
     public float CoolDownLeft = 0;
@@ -27,11 +29,11 @@ public class BaseTurret : GameObject
     {
         Vector2 turretExit =
             Base.GetPosition().Center.ToVector2()
-            + RelativePosition * Rotation
-            + Rotation * Texture.Height / 2f;
+            + RelativePosition.Rotated(Rotation)
+            + (new Vector2(0, Texture.Height) / 2f).Rotated(Rotation);
         GameManager
             .GetGameManager()
-            .AddGameObject(new Bullet(turretExit, Rotation.Normalized(), 1000, Base.Velocity));
+            .AddGameObject(new Bullet(turretExit, (-Vector2.UnitY).Rotated(Rotation), 1000, Base.Velocity));
     }
 
     public override void Load(ContentManager content)
@@ -46,11 +48,11 @@ public class BaseTurret : GameObject
         base.HandleInput(inputManager);
         Vector2 rightStick = inputManager.CurrentGamePadState.ThumbSticks.Right;
         if (rightStick.Length() > 0)
-            Rotation = rightStick.Normalized() * CORR;
+            AimRotation = rightStick.Angle();
         else
-            Rotation = (
+            AimRotation = (
                 inputManager.GetMouseScreenPosition() - Base.GetPosition().Center.ToVector2()
-            ).Normalized();
+            ).Angle();
 
         if (inputManager.LeftMousePress() || inputManager.RightTriggerPress())
         {
@@ -66,6 +68,7 @@ public class BaseTurret : GameObject
     {
         base.Update(gameTime);
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        Rotation += MathHelper.WrapAngle(AimRotation - Rotation) * deltaTime * RotationSpeed;
 
         CoolDownLeft -= deltaTime;
     }
@@ -78,7 +81,7 @@ public class BaseTurret : GameObject
             RelativePosition + Base.GetPosition().Center.ToVector2(),
             (Rectangle?)null,
             Color.White,
-            Rotation.Angle(),
+            Rotation,
             Texture.Bounds.Size.ToVector2() / 2f,
             Vector2.One,
             SpriteEffects.None,

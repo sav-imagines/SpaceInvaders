@@ -7,6 +7,7 @@ namespace SpaceDefence;
 public class DoubleTurret : BaseTurret
 {
     private bool LastTurret = false;
+    public override float RotationSpeed {get; protected set; } = MathHelper.Pi * 1.2f;
 
     public DoubleTurret(Ship ship)
         : base(ship)
@@ -21,11 +22,11 @@ public class DoubleTurret : BaseTurret
             Base.GetPosition().Center.ToVector2()
             + RelativePosition * Rotation
             + new Vector2(Texture.Width / 9 * exitSide, Texture.Height / -2).Rotated(
-                Rotation.Angle()
+                Rotation
             );
         GameManager
             .GetGameManager()
-            .AddGameObject(new Bullet(turretExit, Rotation.Normalized(), 1000, Base.Velocity));
+            .AddGameObject(new Bullet(turretExit, (-Vector2.UnitY).Rotated(Rotation), 1000, Base.Velocity));
         LastTurret = !LastTurret;
     }
 
@@ -34,11 +35,11 @@ public class DoubleTurret : BaseTurret
         base.HandleInput(inputManager);
         Vector2 rightStick = inputManager.CurrentGamePadState.ThumbSticks.Right;
         if (rightStick.Length() > 0)
-            Rotation = rightStick.Normalized() * CORR;
+            AimRotation = rightStick.Angle();
         else
-            Rotation = (
+            AimRotation = (
                 inputManager.GetMouseScreenPosition() - Base.GetPosition().Center.ToVector2()
-            ).Normalized();
+            ).Angle();
 
         if (inputManager.LeftMouseDown() || inputManager.CurrentGamePadState.Triggers.Right > 0)
         {

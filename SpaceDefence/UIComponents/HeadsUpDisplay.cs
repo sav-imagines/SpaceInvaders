@@ -10,13 +10,15 @@ public class HeadsUpDisplay : GameObject {
         .DefaultAdapter
         .CurrentDisplayMode
         .Width / 30;
-    private Texture2D arrowTexture;
+    private Texture2D enemyArrowTexture;
+    private Texture2D supplyArrowTexture;
     public List<GameObject> gameObjects {get; set;}
 
     public override void Load(ContentManager content)
         {
             base.Load(content);
-            arrowTexture = content.Load<Texture2D>("Arrow");
+            enemyArrowTexture = content.Load<Texture2D>("Arrow");
+            supplyArrowTexture = content.Load<Texture2D>("arrow_crate");
         }
 
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -35,7 +37,11 @@ public class HeadsUpDisplay : GameObject {
         foreach (GameObject gameObject in gameObjects) {
             if (gameObject is Alien alien) {
                 Vector2 direction = (alien._circleCollider.Center - playerLocation).Normalized();
-                spriteBatch.Draw(arrowTexture, center + direction * ARROW_DIST, null, Color.White, direction.Angle(), arrowTexture.Bounds.Center.ToVector2(), Vector2.One, SpriteEffects.None, 0);
+                spriteBatch.Draw(enemyArrowTexture, center + direction * ARROW_DIST, null, Color.White, direction.Angle(), enemyArrowTexture.Bounds.Center.ToVector2(), Vector2.One, SpriteEffects.None, 0);
+            }
+            else if (gameObject is Supply supply) {
+                Vector2 direction = (supply.RectangleCollider.shape.Center.ToVector2() - playerLocation).Normalized();
+                spriteBatch.Draw(supplyArrowTexture, center + direction * ARROW_DIST, null, Color.White, direction.Angle(), enemyArrowTexture.Bounds.Center.ToVector2(), Vector2.One, SpriteEffects.None, 0);
             }
         }
     }

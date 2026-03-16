@@ -7,7 +7,7 @@ namespace SpaceDefence;
 
 internal class Supply : GameObject
 {
-    private RectangleCollider _rectangleCollider;
+    public RectangleCollider RectangleCollider {get; private set;}
     private Texture2D _texture;
     private float playerClearance = 100;
 
@@ -20,9 +20,9 @@ internal class Supply : GameObject
     {
         base.Load(content);
         _texture = content.Load<Texture2D>("Crate");
-        _rectangleCollider = new RectangleCollider(_texture.Bounds);
+        RectangleCollider = new RectangleCollider(_texture.Bounds);
 
-        SetCollider(_rectangleCollider);
+        SetCollider(RectangleCollider);
         RandomMove();
     }
 
@@ -37,16 +37,16 @@ internal class Supply : GameObject
     public void RandomMove()
     {
         GameManager gm = GameManager.GetGameManager();
-        _rectangleCollider.shape.Location = (gm.RandomScreenLocation() - _rectangleCollider.shape.Size.ToVector2() / 2).ToPoint();
+        RectangleCollider.shape.Location = (gm.RandomScreenLocation() - RectangleCollider.shape.Size.ToVector2() / 2).ToPoint();
 
         Vector2 centerOfPlayer = gm.Player.GetPosition().Center.ToVector2();
-        while ((_rectangleCollider.shape.Center.ToVector2() - centerOfPlayer).Length() < playerClearance)
-            _rectangleCollider.shape.Location = gm.RandomScreenLocation().ToPoint();
+        while ((RectangleCollider.shape.Center.ToVector2() - centerOfPlayer).Length() < playerClearance)
+            RectangleCollider.shape.Location = gm.RandomScreenLocation().ToPoint();
     }
 
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-        spriteBatch.Draw(_texture, _rectangleCollider.shape, Color.White);
+        spriteBatch.Draw(_texture, RectangleCollider.shape, Color.White);
         base.Draw(gameTime, spriteBatch);
     }
 }
