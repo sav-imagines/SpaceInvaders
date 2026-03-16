@@ -111,8 +111,8 @@ public class Ship : GameObject
             shipLocation.Location.ToVector2(),
             null,
             Color.White,
-            rotation + (float)Math.PI / 2,
-            shipLocation.Size.ToVector2() / 2f,
+            rotation + MathHelper.PiOver2,
+            ship_body.Bounds.Size.ToVector2() / 2f,
             Vector2.One,
             SpriteEffects.None,
             0

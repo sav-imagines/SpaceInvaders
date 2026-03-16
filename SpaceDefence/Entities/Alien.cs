@@ -7,7 +7,7 @@ namespace SpaceDefence;
 internal class Alien : GameObject
 {
     private float TOP_SPEED = 300;
-    private CircleCollider _circleCollider;
+    public CircleCollider _circleCollider { get; private set; }
     private Texture2D _texture;
     private float playerClearance = 100;
     private float speed = 150;

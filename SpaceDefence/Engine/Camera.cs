@@ -41,7 +41,6 @@ public class Camera
             ((Viewport.Size.ToVector2() / 2) - coordinates).ToPoint(),
             Viewport.Size
         );
-        // Viewport = new Rectangle((coordinates - (Viewport.Size.ToVector2() / 2)).ToPoint(), Viewport.Size);
     }
 
     public Vector2 ToScreenSpace(Vector2 vec)

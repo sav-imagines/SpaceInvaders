@@ -25,6 +25,9 @@ namespace SpaceDefence
         public Ship Player { get; private set; }
         public InputManager InputManager { get; private set; }
         public Game Game { get; private set; }
+        public HeadsUpDisplay HUD {get; } = new HeadsUpDisplay();
+
+        public Texture2D BackgroundTexture {get; private set;}
 
         public static GameManager GetGameManager()
         {
@@ -60,6 +63,8 @@ namespace SpaceDefence
             {
                 gameObject.Load(content);
             }
+            BackgroundTexture = content.Load<Texture2D>("stars_texture");
+            HUD.Load(content);
         }
 
         public void HandleInput(InputManager inputManager)
@@ -134,11 +139,18 @@ namespace SpaceDefence
                 _gameObjects.Remove(gameObject);
             }
             _toBeRemoved.Clear();
+            HUD.gameObjects = _gameObjects;
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            Camera.CenterCameraToWorldPosition(Player.GetPosition().Location.ToVector2());
+            Camera.CenterCameraToWorldPosition(Player.GetPosition().Center.ToVector2());
+            spriteBatch.Begin(
+                samplerState: SamplerState.PointClamp
+            );
+            spriteBatch.Draw(BackgroundTexture, new Rectangle(Point.Zero, Camera.Viewport.Size), Color.White);
+            spriteBatch.End();
+
             spriteBatch.Begin(
                 samplerState: SamplerState.PointClamp,
                 transformMatrix: Camera.GetScreenSpaceMatrix()
@@ -151,6 +163,7 @@ namespace SpaceDefence
             if (!State.IsPlaying())
                 GameStateMethods.Screens[State].Draw(gameTime, spriteBatch);
             spriteBatch.End();
+            HUD.Draw(gameTime, spriteBatch);
         }
 
         /// <summary>

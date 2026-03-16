@@ -6,3 +6,6 @@ build:
 
 test:
   dotnet test SpaceDefence-Tests
+
+publish:
+  dotnet publish
