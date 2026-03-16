@@ -16,8 +16,9 @@ public class Ship : GameObject
 
     private readonly Vector2 CORR = new Vector2(1, -1);
 
+    public BaseTurret Turret;
+
     private Texture2D ship_body;
-    private Texture2D base_turret;
     private Texture2D laser_turret;
     private float buffTimer = 0;
     private float buffDuration = 10f;
@@ -39,49 +40,24 @@ public class Ship : GameObject
     {
         _rectangleCollider = new RectangleCollider(new Rectangle(Position, Point.Zero));
         SetCollider(_rectangleCollider);
+        Turret = new DoubleTurret(this);
     }
 
     public override void Load(ContentManager content)
     {
         // Ship sprites from: https://zintoki.itch.io/space-breaker
         ship_body = content.Load<Texture2D>("ship_body");
-        base_turret = content.Load<Texture2D>("base_turret");
-        laser_turret = content.Load<Texture2D>("laser_turret");
         _rectangleCollider.shape.Size = ship_body.Bounds.Size;
-        _rectangleCollider.shape.Location -= new Point(
-            ship_body.Width / 2,
-            ship_body.Height / 2
-        );
+        _rectangleCollider.shape.Location -= new Point(ship_body.Width / 2, ship_body.Height / 2);
+        Turret.Load(content);
         base.Load(content);
     }
 
     public override void HandleInput(InputManager inputManager)
     {
         base.HandleInput(inputManager);
-        Vector2 rightStick = inputManager.CurrentGamePadState.ThumbSticks.Right;
 
-        if (rightStick.Length() > DEAD_ZONE)
-            turretAim = rightStick.Normalized() * CORR;
-        else
-            turretAim = (inputManager.GetMouseScreenPosition() - _rectangleCollider.shape.Center.ToVector2()).Normalized();
-
-        if (inputManager.RightTriggerPress() || inputManager.LeftMousePress())
-        {
-            target = (_rectangleCollider.shape.Center.ToVector2() + turretAim * 400).ToPoint();
-            Vector2 turretExit =
-                _rectangleCollider.shape.Center.ToVector2()
-                + turretAim * base_turret.Height / 2f;
-            if (buffTimer <= 0)
-                GameManager
-                    .GetGameManager()
-                    .AddGameObject(new Bullet(turretExit, turretAim, 1000));
-            else
-                GameManager
-                    .GetGameManager()
-                    .AddGameObject(
-                        new Laser(new LinePieceCollider(turretExit, target.ToVector2()), 700)
-                    );
-        }
+        Turret.HandleInput(inputManager);
 
         if (inputManager.IsKeyDown(Keys.W))
             gasPedal = 1;
@@ -89,7 +65,6 @@ public class Ship : GameObject
             gasPedal = inputManager.CurrentGamePadState.Triggers.Left;
         else
             gasPedal = 0;
-
 
         Vector2 leftStick = inputManager.CurrentGamePadState.ThumbSticks.Left;
         if (inputManager.CurrentGamePadState.ThumbSticks.Left.Length() > DEAD_ZONE)
@@ -108,13 +83,13 @@ public class Ship : GameObject
     public override void Update(GameTime gameTime)
     {
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        Turret.Update(gameTime);
         // Update the Buff timer
-        if (buffTimer > 0)
-            buffTimer -= deltaTime;
+        buffTimer -= deltaTime;
 
         rotation =
-            rotation
-            + MathHelper.WrapAngle(rotationAim - rotation) * deltaTime * ROTATION_SPEED;
+            rotation + MathHelper.WrapAngle(rotationAim - rotation) * deltaTime * ROTATION_SPEED;
         velocity +=
             new Vector2((float)Math.Cos(rotation), (float)Math.Sin(rotation))
             * ACCELERATION
@@ -142,36 +117,8 @@ public class Ship : GameObject
             SpriteEffects.None,
             0
         );
-        if (buffTimer <= 0)
-        {
-            Rectangle turretLocation = base_turret.Bounds;
-            turretLocation.Location = _rectangleCollider.shape.Center;
-            spriteBatch.Draw(
-                base_turret,
-                turretLocation,
-                null,
-                Color.White,
-                turretAim.Angle(),
-                turretLocation.Size.ToVector2() / 2f,
-                SpriteEffects.None,
-                0
-            );
-        }
-        else
-        {
-            Rectangle turretLocation = laser_turret.Bounds;
-            turretLocation.Location = _rectangleCollider.shape.Center;
-            spriteBatch.Draw(
-                laser_turret,
-                turretLocation,
-                null,
-                Color.White,
-                turretAim.Angle(),
-                turretLocation.Size.ToVector2() / 2f,
-                SpriteEffects.None,
-                0
-            );
-        }
+
+        Turret.Draw(gameTime, spriteBatch);
         base.Draw(gameTime, spriteBatch);
     }
 

@@ -78,6 +78,11 @@ public class InputManager
             && LastMouseState.LeftButton == ButtonState.Released;
     }
 
+    public bool LeftMouseDown()
+    {
+        return CurrentMouseState.LeftButton == ButtonState.Pressed;
+    }
+
     /// <summary>
     /// Gets whether the right mouse button was pressed in this frame.
     /// </summary>
@@ -86,6 +91,11 @@ public class InputManager
     {
         return CurrentMouseState.RightButton == ButtonState.Pressed
             && LastMouseState.RightButton == ButtonState.Released;
+    }
+
+    public bool RightMouseDown()
+    {
+        return CurrentMouseState.RightButton == ButtonState.Pressed;
     }
 
     public bool LeftTriggerPress()
@@ -101,6 +111,11 @@ public class InputManager
     public bool IsButtonPress(Buttons button)
     {
         return CurrentGamePadState.IsButtonDown(button) && LastGamePadState.IsButtonUp(button);
+    }
+
+    public bool IsButtonDown(Buttons button)
+    {
+        return CurrentGamePadState.IsButtonDown(button);
     }
 
     public Vector2 GetMouseScreenPosition()

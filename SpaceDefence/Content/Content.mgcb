@@ -61,6 +61,18 @@
 /processorParam:TextureFormat=Color
 /build:Crate.png
 
+#begin double_turret.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:double_turret.png
+
 #begin laser_turret.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -86,8 +98,10 @@
 /build:Laser.png
 
 #begin PixelFont.spritefont
-/importer:
-/processor:
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
 /build:PixelFont.spritefont
 
 #begin ship_body.png
@@ -101,4 +115,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:ship_body.png
+
+#begin stars_texture.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:stars_texture.png
 

@@ -69,7 +69,7 @@ namespace SpaceDefence
                 case GameState.Playing:
                     if (
                         inputManager.IsKeyPress(Keys.Escape)
-                        || inputManager.IsButtonPress(Buttons.A)
+                        || inputManager.IsButtonPress(Buttons.Back)
                     )
                     {
                         State = GameState.Paused;

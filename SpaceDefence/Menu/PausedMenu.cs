@@ -15,7 +15,7 @@ public class PausedMenu : GameObject
     public override void HandleInput(InputManager inputManager)
     {
         base.HandleInput(inputManager);
-        if (inputManager.IsKeyPress(Keys.Space) || inputManager.IsButtonPress(Buttons.A))
+        if (inputManager.IsKeyPress(Keys.Space) || inputManager.IsButtonPress(Buttons.Back))
             GameManager.GetGameManager().State = GameState.Playing;
         else if (inputManager.IsKeyPress(Keys.Escape))
             GameManager.GetGameManager().Game.Exit();
