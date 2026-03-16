@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using SpaceDefence.Collision;
 
 namespace SpaceDefence;
+
 public class Ship : GameObject
 {
     private const float DEAD_ZONE = 0.0f;

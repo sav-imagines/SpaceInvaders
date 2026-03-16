@@ -11,13 +11,14 @@ namespace SpaceDefence
     {
         public const int SCALE = 4;
 
-        private GameState state = GameState.Playing;
         private static GameManager gameManager;
 
         private List<GameObject> _gameObjects;
         private List<GameObject> _toBeRemoved;
         private List<GameObject> _toBeAdded;
         private ContentManager _content;
+
+        public GameState State {get; set; } = GameState.Mainmenu;
 
         public Random RNG { get; private set; }
         public Camera Camera { get; private set; }
@@ -68,12 +69,18 @@ namespace SpaceDefence
                 gameObject.HandleInput(this.InputManager);
             }
 
+            // if (inputManager.IsKeyDown(Keys.Escape) || inputManager.IsButtonPress(Buttons.Start))
+            //     if (!state.IsPlaying())
+            //         Game.Exit();
+            //     else
+            //         state = GameState.Paused;
+
             if (
-                !state.IsPlaying()
+                !State.IsPlaying()
                 && (inputManager.IsKeyDown(Keys.Space) || inputManager.IsButtonPress(Buttons.A))
             )
             {
-                state = GameState.Playing;
+                State = GameState.Playing;
                 Player.ResetPosition();
             }
             if (inputManager.IsButtonPress(Buttons.Start))
@@ -103,7 +110,7 @@ namespace SpaceDefence
             // Handle input
             HandleInput(InputManager);
 
-            if (!state.IsPlaying()) // the game stops running during the death screen, save for handling input
+            if (!State.IsPlaying()) // the game stops running during the death screen, save for handling input
                 return;
 
             // Update
@@ -147,8 +154,8 @@ namespace SpaceDefence
             {
                 gameObject.Draw(gameTime, spriteBatch);
             }
-            if (!state.IsPlaying())
-                GameStateMethods.Screens[state].Draw(gameTime, spriteBatch);
+            if (!State.IsPlaying())
+                GameStateMethods.Screens[State].Draw(gameTime, spriteBatch);
             spriteBatch.End();
         }
 
@@ -185,9 +192,9 @@ namespace SpaceDefence
             );
         }
 
-        public void Death()
+        public void SetState()
         {
-            state = GameState.Gameover;
+            State = GameState.Gameover;
         }
 
         public Rectangle GetScreenDimensions() => Game.GraphicsDevice.Viewport.Bounds;
