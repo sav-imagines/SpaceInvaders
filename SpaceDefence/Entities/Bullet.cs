@@ -11,11 +11,11 @@ internal class Bullet : GameObject
     private Vector2 _velocity;
     public float bulletSize = 4;
 
-    public Bullet(Vector2 location, Vector2 direction, float speed)
+    public Bullet(Vector2 location, Vector2 direction, float speed, Vector2 startVelocity)
     {
         _circleCollider = new CircleCollider(location, bulletSize);
         SetCollider(_circleCollider);
-        _velocity = direction * speed;
+        _velocity = direction * speed + startVelocity;
     }
 
     public override void Load(ContentManager content)

@@ -25,7 +25,7 @@ public class Ship : GameObject
     private RectangleCollider _rectangleCollider;
     private Point target;
 
-    private Vector2 velocity;
+    public Vector2 Velocity {get; private set; }
     private float rotation;
     private Vector2 turretAim;
     private float rotationAim; // the angle you are steering towards
@@ -77,7 +77,7 @@ public class Ship : GameObject
         else if (inputManager.IsKeyDown(Keys.D))
             rotationAim = rotation + MathHelper.PiOver4;
         else if (inputManager.IsKeyDown(Keys.S)) // S angles against the current velocity
-            rotationAim = velocity.Angle() + MathHelper.PiOver2;
+            rotationAim = Velocity.Angle() + MathHelper.PiOver2;
     }
 
     public override void Update(GameTime gameTime)
@@ -90,14 +90,14 @@ public class Ship : GameObject
 
         rotation =
             rotation + MathHelper.WrapAngle(rotationAim - rotation) * deltaTime * ROTATION_SPEED;
-        velocity +=
+        Velocity +=
             new Vector2((float)Math.Cos(rotation), (float)Math.Sin(rotation))
             * ACCELERATION
             * gasPedal
             * deltaTime;
-        if (velocity.Length() > TOP_SPEED)
-            velocity = velocity.Normalized() * TOP_SPEED;
-        this._rectangleCollider.shape.Offset(Vector2.One * velocity * deltaTime);
+        if (Velocity.Length() > TOP_SPEED)
+            Velocity = Velocity.Normalized() * TOP_SPEED;
+        this._rectangleCollider.shape.Offset(Vector2.One * Velocity * deltaTime);
 
         base.Update(gameTime);
     }
@@ -138,6 +138,6 @@ public class Ship : GameObject
             .GetGameManager()
             .RandomScreenLocation()
             .ToPoint();
-        velocity = Vector2.Zero;
+        Velocity = Vector2.Zero;
     }
 }

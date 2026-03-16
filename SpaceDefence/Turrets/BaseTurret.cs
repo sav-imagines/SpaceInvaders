@@ -31,7 +31,7 @@ public class BaseTurret : GameObject
             + Rotation * Texture.Height / 2f;
         GameManager
             .GetGameManager()
-            .AddGameObject(new Bullet(turretExit, Rotation.Normalized(), 1000));
+            .AddGameObject(new Bullet(turretExit, Rotation.Normalized(), 1000, Base.Velocity));
     }
 
     public override void Load(ContentManager content)

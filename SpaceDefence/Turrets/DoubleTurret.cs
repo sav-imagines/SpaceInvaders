@@ -25,7 +25,7 @@ public class DoubleTurret : BaseTurret
             );
         GameManager
             .GetGameManager()
-            .AddGameObject(new Bullet(turretExit, Rotation.Normalized(), 1000));
+            .AddGameObject(new Bullet(turretExit, Rotation.Normalized(), 1000, Base.Velocity));
         LastTurret = !LastTurret;
     }
 
