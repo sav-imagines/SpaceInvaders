@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using SpaceDefence.Collision;
 
 namespace SpaceDefence;
 
@@ -7,6 +8,10 @@ public class Camera
     public const float MAX_SPEED = 400;
     public Rectangle Viewport { get; set; }
     private GameManager Game { get; set; }
+    public RectangleCollider Collider { get {
+        Rectangle ScreenSpaceRect = new Rectangle(ToScreenSpace(new Vector2(0, 0)).ToPoint(), Viewport.Size);
+        return new RectangleCollider(ScreenSpaceRect);
+    }}
 
     public Camera(GameManager game, Rectangle viewport)
     {
@@ -53,9 +58,18 @@ public class Camera
         return Vector2.Transform(vec, GetScreenSpaceMatrix());
     }
 
-    public bool IsOnScreen(Vector2 worldSpacePos)
+    public bool IsOnScreen(RectangleCollider item)
     {
-        Rectangle ScreenSpaceRect = new Rectangle(ToScreenSpace(new Vector2(0, 0)).ToPoint(), Viewport.Size);
-        return ScreenSpaceRect.Contains(worldSpacePos);
+        return this.Collider.Intersects(item);
+    }
+
+    public bool IsOnScreen(CircleCollider item)
+    {
+        return this.Collider.Intersects(item);
+    }
+
+    public bool IsOnScreen(LinePieceCollider item)
+    {
+        return this.Collider.Intersects(item);
     }
 }

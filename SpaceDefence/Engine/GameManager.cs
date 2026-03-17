@@ -27,6 +27,8 @@ namespace SpaceDefence
         public Game Game { get; private set; }
         public HeadsUpDisplay HUD {get; } = new HeadsUpDisplay();
 
+        public WaveFactory WaveFactory { get; } = new WaveFactory();
+
         public Texture2D BackgroundTexture {get; private set;}
 
         public static GameManager GetGameManager()
@@ -140,6 +142,9 @@ namespace SpaceDefence
             }
             _toBeRemoved.Clear();
             HUD.gameObjects = _gameObjects;
+
+            if (WaveFactory.AlienCount <= 0)
+                WaveFactory.NextWave().ForEach(obj => AddGameObject(obj));
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -197,10 +202,10 @@ namespace SpaceDefence
         /// </summary>
         public Vector2 RandomScreenLocation()
         {
-            return new Vector2(
+            return Camera.ToScreenSpace(new Vector2(
                 RNG.Next(0, Game.GraphicsDevice.Viewport.Width),
                 RNG.Next(0, Game.GraphicsDevice.Viewport.Height)
-            );
+            ));
         }
 
         public void SetState()

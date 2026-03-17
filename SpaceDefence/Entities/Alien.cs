@@ -6,13 +6,18 @@ namespace SpaceDefence;
 
 internal class Alien : GameObject
 {
-    private float TOP_SPEED = 300;
     public CircleCollider _circleCollider { get; private set; }
     private Texture2D _texture;
-    private float playerClearance = 100;
-    private float speed = 150;
+    private float playerClearance = 200;
+    private float Speed;
 
-    public Alien() { }
+    public Alien() {
+        Speed = 150;
+    }
+
+    public Alien(float speed) {
+        Speed = speed;
+    }
 
     public override void Load(ContentManager content)
     {
@@ -27,9 +32,8 @@ internal class Alien : GameObject
     {
         if (other is Ship player)
             GameManager.GetGameManager().State = GameState.Gameover;
-        RandomMove();
-        speed = speed > TOP_SPEED ? TOP_SPEED : speed + 30;
-        base.OnCollision(other);
+        GameManager.GetGameManager().WaveFactory.AlienDied();
+        GameManager.GetGameManager().RemoveGameObject(this);
     }
 
     public override void Update(GameTime gameTime)
@@ -40,7 +44,7 @@ internal class Alien : GameObject
             .Player.GetPosition()
             .Center.ToVector2();
         _circleCollider.Center +=
-            (playerLocation - _circleCollider.Center).Normalized() * speed * deltaTime;
+            (playerLocation - _circleCollider.Center).Normalized() * Speed * deltaTime;
     }
 
     public void RandomMove()

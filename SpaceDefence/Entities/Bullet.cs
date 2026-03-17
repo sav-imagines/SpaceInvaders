@@ -30,7 +30,7 @@ internal class Bullet : GameObject
         _circleCollider.Center += _velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
         GameManager gameManager = GameManager.GetGameManager();
         Camera camera = gameManager.Camera;
-        if (!camera.IsOnScreen(_circleCollider.Center))
+        if (!camera.IsOnScreen(_circleCollider))
             GameManager.GetGameManager().RemoveGameObject(this);
     }
 
