@@ -32,7 +32,7 @@ public class MainMenu : GameObject
             button.Load(content);
         foreach(Text text in textItems)
             text.Load(content);
-        font = content.Load<SpriteFont>("PixelFont");
+        font = content.Load<SpriteFont>("Other/PixelFont");
     }
 
     public override void HandleInput(InputManager inputManager)

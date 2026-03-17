@@ -40,7 +40,7 @@ public class BaseTurret : GameObject
     {
         // Ship sprites from: https://zintoki.itch.io/space-breaker
         base.Load(content);
-        Texture = content.Load<Texture2D>("base_turret");
+        Texture = content.Load<Texture2D>("Ship/Base_Turret");
     }
 
     public override void HandleInput(InputManager inputManager)

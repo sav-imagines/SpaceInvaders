@@ -29,7 +29,7 @@ public class LaserTurret : BaseTurret
     public override void Load(ContentManager content)
     {
         // Ship sprites from: https://zintoki.itch.io/space-breaker
-        base.Texture = content.Load<Texture2D>("laser_turret");
+        base.Texture = content.Load<Texture2D>("Ship/Laser_Turret");
         // NOT LOADING BASE CLASS TEXTURES SINCE THAT'D OVERRIDE OUR BEAUTIFUL TURRET
     }
 }

@@ -32,7 +32,7 @@ public class Text : GameObject
 
     public override void Load(ContentManager content)
     {
-        Font ??= content.Load<SpriteFont>("PixelFont");
+        Font ??= content.Load<SpriteFont>("Other/PixelFont");
     }
 
 
@@ -41,7 +41,6 @@ public class Text : GameObject
         Vector2 screenSize = GameManager.GetGameManager().Camera.Viewport.Size.ToVector2();
         Vector2 sizeA = Font.MeasureString(Content) * FONT_SCALE;
         Vector2 posA = new Vector2(sizeA.X * -.5f, -sizeA.Y * -.5f) + screenSize * Center;
-        GameManager.GetGameManager().DrawRectangle(new Rectangle(posA.ToPoint(), sizeA.ToPoint()), Color.Blue, spriteBatch);
         spriteBatch.DrawString(
             Font,
             Content,

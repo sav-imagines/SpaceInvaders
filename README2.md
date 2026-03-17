@@ -9,7 +9,7 @@ All the sprites you need can be found in the assets folder, but you are also fre
 Implement the following functionality:
 
 #### Add a start and pause screen:
-- [ ] Add a start screen to the game from where the player can at least start or quit the game. (0.5p)
+- [x] Add a start screen to the game from where the player can at least start or quit the game. (0.5p)
 - [x] Add a pause screen from where the player can at least continue or quit the game. The game should still be visible in the background, but not be updated.  (0.5p)
 
 #### Expand the level:
@@ -17,7 +17,7 @@ Implement the following functionality:
 
 #### More enemies:
 - [ ] Add a new asteroid enemy that does not move, and destroys both the player and enemies on touch. (0.5p)
-- [ ] Spawn more enemies over time, slowly ramping up the difficulty. (0.5p)
+- [x] Spawn more enemies over time, slowly ramping up the difficulty. (0.5p)
 
 #### Animations:
 - [ ] Implement a class that can play an animation using a sprite sheet. (0.5p)
@@ -30,7 +30,7 @@ Implement the following functionality:
 - [ ] There should always be some indication of whether or not the player is carrying any cargo. (HUD) (1p)
 
 #### New Weapon:
-- [ ] Extract a weapon class for the two current weapons that can be added to the ship as a component to the ship. (1p)
+- [x] Extract a weapon class for the two current weapons that can be added to the ship as a component to the ship. (1p)
 - [ ] Add a third weapon, the player can pick up. (0.5)
 - [ ] Add some unique functionality to the weapon. You can decide what it does. It can for example be an explosion, or a lightning weapon that also hits nearby targets (1p)
 
@@ -39,6 +39,7 @@ Add something new to the game of your choosing. For example:
 - [ ] More enemy types (.5-2p depending on complexity of the enemies)
 - [ ] Health bars (~1p for health bars that follow both enemies and the player)
 - [ ] Weapon upgrades (1-2p depending on depth)
+- [x] Enemy/supply direction indicator
 
 Add a short description of what you added. You can get up to 2 points depending on complexity 
 

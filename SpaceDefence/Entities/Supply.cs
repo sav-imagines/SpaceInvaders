@@ -19,7 +19,7 @@ internal class Supply : GameObject
     public override void Load(ContentManager content)
     {
         base.Load(content);
-        _texture = content.Load<Texture2D>("Crate");
+        _texture = content.Load<Texture2D>("Entities/Crate");
         RectangleCollider = new RectangleCollider(_texture.Bounds);
 
         SetCollider(RectangleCollider);

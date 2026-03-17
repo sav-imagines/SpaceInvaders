@@ -20,7 +20,7 @@ internal class Bullet : GameObject
 
     public override void Load(ContentManager content)
     {
-        _texture = content.Load<Texture2D>("Bullet");
+        _texture = content.Load<Texture2D>("Weapons/Bullet");
         base.Load(content);
     }
 

@@ -17,8 +17,8 @@ public class HeadsUpDisplay : GameObject {
     public override void Load(ContentManager content)
         {
             base.Load(content);
-            enemyArrowTexture = content.Load<Texture2D>("Arrow");
-            supplyArrowTexture = content.Load<Texture2D>("arrow_crate");
+            enemyArrowTexture = content.Load<Texture2D>("UI/Arrow_Alien");
+            supplyArrowTexture = content.Load<Texture2D>("UI/Arrow_Crate");
         }
 
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)

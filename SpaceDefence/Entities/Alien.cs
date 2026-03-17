@@ -22,7 +22,7 @@ internal class Alien : GameObject
     public override void Load(ContentManager content)
     {
         base.Load(content);
-        _texture = content.Load<Texture2D>("Alien");
+        _texture = content.Load<Texture2D>("Entities/Alien");
         _circleCollider = new CircleCollider(Vector2.Zero, _texture.Width / 2);
         SetCollider(_circleCollider);
         RandomMove();

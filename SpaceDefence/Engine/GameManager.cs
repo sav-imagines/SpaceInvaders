@@ -65,7 +65,7 @@ namespace SpaceDefence
             {
                 gameObject.Load(content);
             }
-            BackgroundTexture = content.Load<Texture2D>("stars_texture");
+            BackgroundTexture = content.Load<Texture2D>("Other/Stars_Texture");
             HUD.Load(content);
         }
 

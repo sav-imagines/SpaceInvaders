@@ -54,7 +54,7 @@ public class DoubleTurret : BaseTurret
     public override void Load(ContentManager content)
     {
         // Ship sprites from: https://zintoki.itch.io/space-breaker
-        base.Texture = content.Load<Texture2D>("double_turret");
+        base.Texture = content.Load<Texture2D>("Ship/Double_Turret");
         // NOT LOADING BASE CLASS TEXTURES SINCE THAT'D OVERRIDE OUR BEAUTIFUL TURRET
     }
 }

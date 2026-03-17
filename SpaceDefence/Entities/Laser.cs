@@ -26,7 +26,7 @@ internal class Laser : GameObject
     public override void Load(ContentManager content)
     {
         base.Load(content);
-        sprite = content.Load<Texture2D>("Laser");
+        sprite = content.Load<Texture2D>("Weapons/Laser");
     }
 
     public override void Update(GameTime gameTime)

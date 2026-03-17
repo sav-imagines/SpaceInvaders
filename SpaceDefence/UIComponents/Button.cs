@@ -29,7 +29,7 @@ public class Button : Clickable {
     public override void Load(ContentManager content)
     {
         base.Load(content);
-        font = content.Load<SpriteFont>("PixelFont");
+        font = content.Load<SpriteFont>("Other/PixelFont");
         Vector2 textSize = font.MeasureString(Text) * FONT_SCALE;
         Position = new RectangleCollider(new Rectangle((Position.shape.Location.ToVector2() - textSize / 2).ToPoint(), textSize.ToPoint()));
     }

@@ -45,7 +45,7 @@ public class Ship : MovingObject
     public override void Load(ContentManager content)
     {
         // Ship sprites from: https://zintoki.itch.io/space-breaker
-        ship_body = content.Load<Texture2D>("ship_body");
+        ship_body = content.Load<Texture2D>("Ship/Ship_Body");
         _rectangleCollider.shape.Size = ship_body.Bounds.Size;
         _rectangleCollider.shape.Location -= new Point(ship_body.Width / 2, ship_body.Height / 2);
         Turret.Load(content);
