@@ -46,7 +46,7 @@ public sealed class CameraTests
 
         // check that using 'ToWorldSpace' transforms it along with the camera
         Console.WriteLine(newPosition);
-        Assert.IsTrue(camera.IsOnScreen(newPosition));
+        Assert.IsTrue(camera.IsOnScreen(new CircleCollider(newPosition, 0)));
     }
 
     [TestMethod]

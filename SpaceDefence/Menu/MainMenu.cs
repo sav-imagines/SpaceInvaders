@@ -10,31 +10,36 @@ public class MainMenu : GameObject
 {
     private const float FONT_SCALE = 4;
 
+    private List<Text> textItems = [];
     private List<Button> buttons = [];
     private SpriteFont font;
 
-    public override void Load(ContentManager content)
+    public MainMenu()
     {
-        base.Load(content);
-        // TODO: get screen size live?
-
-        // PROBLEM: this crashes
-        // var screen = GameManager.GetGameManager().Camera.Viewport.Size.ToVector2();
         var screen = new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
         buttons = [
-            new Button(() => { GameManager.GetGameManager().State = GameState.Playing;}, screen / 2 + Vector2.UnitY * screen.Y * 0.05f, "Play"),
-            new Button(() => {GameManager.GetGameManager().Game.Exit();}, screen / 2 + Vector2.UnitY * screen.Y * 0.1f, "Quit")
+            new Button(() => {GameManager.GetGameManager().State = GameState.Playing;}, screen / 2 + Vector2.UnitY * screen.Y * 0.05f, "(A)  Play"),
+            new Button(() => {GameManager.GetGameManager().Game.Exit();}, screen / 2 + Vector2.UnitY * screen.Y * 0.1f, "(-)  Quit")
         ];
+        textItems = [
+            new Text("MAIN  MENU", new Vector2(.5f, .4f)),
+        ];
+
+    }
+    public override void Load(ContentManager content)
+    {
         foreach(Button button in buttons)
             button.Load(content);
+        foreach(Text text in textItems)
+            text.Load(content);
         font = content.Load<SpriteFont>("PixelFont");
     }
 
     public override void HandleInput(InputManager inputManager)
         {
-        if (inputManager.IsKeyPress(Keys.Space) || inputManager.IsButtonPress(Buttons.A))
+        if (inputManager.IsButtonPress(Buttons.A))
             GameManager.GetGameManager().State = GameState.Playing;
-        else if (inputManager.IsKeyPress(Keys.Escape))
+        else if (inputManager.IsKeyPress(Keys.Escape) || inputManager.IsButtonPress(Buttons.Back))
             GameManager.GetGameManager().Game.Exit();
 
         foreach(Button button in buttons)
@@ -53,21 +58,10 @@ public class MainMenu : GameObject
         Camera Camera = GameManager.GetGameManager().Camera;
         Vector2 ScreenSize = Camera.Viewport.Size.ToVector2();
 
-        string outputA = "MAIN  MENU";
-        Vector2 sizeA = font.MeasureString(outputA) * FONT_SCALE * 1.5f;
-        Vector2 posA = new Vector2(sizeA.X * -0.5f, -sizeA.Y * 1) + ScreenSize / 2;
-        spriteBatch.DrawString(
-            font,
-            outputA,
-            posA,
-            Color.White,
-            0,
-            Vector2.Zero,
-            Vector2.One * FONT_SCALE * 1.5f,
-            SpriteEffects.None,
-            0
-        );
+
         foreach(Button button in buttons)
             button.Draw(gameTime, spriteBatch);
+        foreach(Text text in textItems)
+            text.Draw(gameTime, spriteBatch);
     }
 }

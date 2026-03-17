@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,24 +8,45 @@ namespace SpaceDefence;
 
 public class GameOverMenu : GameObject
 {
-    private SpriteFont font;
-    private float FONT_SCALE = 4;
+    private List<Text> textItems = []; 
+    private List<Button> buttons = [];
 
-    // private Camera Camera = GameManager.GetGameManager().Camera;
-
-    public override void HandleInput(InputManager inputManager)
+    public GameOverMenu()
     {
-        base.HandleInput(inputManager);
-        if (inputManager.IsKeyPress(Keys.Space) || inputManager.IsButtonPress(Buttons.A))
-            GameManager.GetGameManager().State = GameState.Playing;
-        else if (inputManager.IsKeyPress(Keys.Escape))
-            GameManager.GetGameManager().Game.Exit();
+        var screen = new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
+        buttons = [
+            new Button(Continue, screen / 2 + Vector2.UnitY * screen.Y * 0.05f, "(A)  Respawn"),
+            new Button(ToMainMenu, screen / 2 + Vector2.UnitY * screen.Y * 0.1f, "(-)  Main  menu")
+        ];
+        textItems = [
+            new Text("GAME  OVER", new Vector2(.5f, .4f)),
+        ];
     }
 
     public override void Load(ContentManager content)
     {
-        base.Load(content);
-        font = content.Load<SpriteFont>("PixelFont");
+        foreach(Button button in buttons)
+            button.Load(content);
+        foreach(Text text in textItems)
+            text.Load(content);
+    }
+
+    public override void HandleInput(InputManager inputManager)
+        {
+        if (inputManager.IsButtonPress(Buttons.A))
+            Continue();
+        else if (inputManager.IsKeyPress(Keys.Escape))
+            ToMainMenu();
+
+        foreach(Button button in buttons)
+            button.HandleInput(inputManager);
+        }
+
+    public override void Update(GameTime gameTime)
+    {
+        base.Update(gameTime);
+        foreach(Button button in buttons)
+            button.Update(gameTime);
     }
 
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -39,34 +61,15 @@ public class GameOverMenu : GameObject
         GameManager
             .GetGameManager()
             .DrawRectangle(ScreenSpaceRect, new Color(0, 0, 0, 200), spriteBatch);
-        string outputA = "GAME  OVER";
-        Vector2 sizeA = font.MeasureString(outputA) * FONT_SCALE;
-        Vector2 posA = new Vector2(sizeA.X * -0.5f, -sizeA.Y * 2) + ScreenSize / 2;
-        spriteBatch.DrawString(
-            font,
-            outputA,
-            posA,
-            Color.White,
-            0,
-            Vector2.Zero,
-            Vector2.One * FONT_SCALE,
-            SpriteEffects.None,
-            0
-        );
-        float subtitleScale = FONT_SCALE * .7f;
-        string outputB = "Press  spacebar  or (A)  to  continue.";
-        Vector2 sizeB = font.MeasureString(outputB) * subtitleScale;
-        Vector2 posB = new Vector2(sizeB.X * -0.5f, sizeB.Y * 2) + ScreenSize / 2;
-        spriteBatch.DrawString(
-            font,
-            outputB,
-            posB,
-            Color.White,
-            0,
-            Vector2.Zero,
-            Vector2.One * subtitleScale,
-            SpriteEffects.None,
-            0
-        );
+        foreach(Button button in buttons)
+            button.Draw(gameTime, spriteBatch);
+        foreach(Text text in textItems)
+            text.Draw(gameTime, spriteBatch);
     }
+
+    private void ToMainMenu() =>
+        GameManager.GetGameManager().State = GameState.Mainmenu;
+
+    private void Continue() =>
+        GameManager.GetGameManager().State = GameState.Playing;
 }
