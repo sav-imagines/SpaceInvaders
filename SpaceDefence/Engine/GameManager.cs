@@ -18,7 +18,7 @@ namespace SpaceDefence
         private List<GameObject> _toBeAdded;
         private ContentManager _content;
 
-        public GameState State { get; set; } = GameState.Paused;
+        public GameState State { get; set; } = GameState.Mainmenu;
 
         public Random RNG { get; private set; }
         public Camera Camera { get; private set; }
