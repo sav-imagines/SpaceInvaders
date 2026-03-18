@@ -18,6 +18,7 @@ Use the mouse to aim and click to shoot. With the double gun, it is possible to 
 
 ## Known bugs:
 - Going back to the main menu makes visual buttons freeze. For now the workaround to this is closing the game with Escape.
+- Unit tests crash, as the code has started relying on a GraphicsDevice being set.
 
 ## New assets' sources:
 | Asset                                 | Source                                 | License                  |

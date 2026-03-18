@@ -12,7 +12,7 @@ public class Ship : MovingObject
     private const float DEAD_ZONE = 0.0f;
     private const float TOP_SPEED = 500;
     private const float ACCELERATION = 400;
-    private const float ROTATION_SPEED = MathHelper.Pi;
+    private const float ROTATION_SPEED = MathHelper.PiOver2 * 1.5f;
 
     private readonly Vector2 CORR = new Vector2(1, -1);
     private readonly BaseTurret[] Turrets;

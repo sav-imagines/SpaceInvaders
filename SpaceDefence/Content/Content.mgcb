@@ -37,30 +37,6 @@
 /processorParam:TextureFormat=Color
 /build:Entities/Crate.png
 
-#begin Exhaust/exhaust_01a.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Exhaust/exhaust_01a.png
-
-#begin Exhaust/exhaust_01b.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Exhaust/exhaust_01b.png
-
 #begin Other/PixelFont.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

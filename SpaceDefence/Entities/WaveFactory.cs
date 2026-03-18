@@ -7,8 +7,8 @@ namespace SpaceDefence;
 
 public class WaveFactory
 {
-    private const float TOP_SPEED = 300;
-    private const float START_SPEED = 150;
+    private const float TOP_SPEED = 600;
+    private const float START_SPEED = 480;
 
     public int AlienCount { get; private set; } = 1;
 
