@@ -14,7 +14,7 @@ public class BaseTurret : GameObject
     public float AimRotation { get; set; }
 
     public virtual float RotationSpeed {get; protected set; } = MathHelper.Pi * 1.5f;
-    public virtual float CoolDown { get; protected set; } = 0.2f;
+    public virtual float CoolDown { get; protected set; } = 0.5f;
 
     public float CoolDownLeft = 0;
 
@@ -29,8 +29,8 @@ public class BaseTurret : GameObject
     {
         Vector2 turretExit =
             Base.GetPosition().Center.ToVector2()
-            + RelativePosition.Rotated(Rotation)
-            + (new Vector2(0, Texture.Height) / 2f).Rotated(Rotation);
+            + RelativePosition * Rotation
+            + (new Vector2(0, Texture.Height) / -2f).Rotated(Rotation);
         GameManager
             .GetGameManager()
             .AddGameObject(new Bullet(turretExit, (-Vector2.UnitY).Rotated(Rotation), 1000, Base.Velocity));

@@ -15,6 +15,7 @@ public class Ship : MovingObject
     private const float ROTATION_SPEED = MathHelper.Pi;
 
     private readonly Vector2 CORR = new Vector2(1, -1);
+    private readonly BaseTurret[] Turrets;
 
     public BaseTurret Turret;
 
@@ -30,6 +31,7 @@ public class Ship : MovingObject
     private float rotationAim; // the angle you are steering towards
 
     private float gasPedal;
+    private int points = 0;
 
     /// <summary>
     /// The player character
@@ -39,7 +41,8 @@ public class Ship : MovingObject
     {
         _rectangleCollider = new RectangleCollider(new Rectangle(Position, Point.Zero));
         SetCollider(_rectangleCollider);
-        Turret = new DoubleTurret(this);
+        Turrets = [new BaseTurret(this), new LaserTurret(this), new DoubleTurret(this)];
+        Turret = Turrets[0];
     }
 
     public override void Load(ContentManager content)
@@ -48,7 +51,8 @@ public class Ship : MovingObject
         ship_body = content.Load<Texture2D>("Ship/Ship_Body");
         _rectangleCollider.shape.Size = ship_body.Bounds.Size;
         _rectangleCollider.shape.Location -= new Point(ship_body.Width / 2, ship_body.Height / 2);
-        Turret.Load(content);
+        foreach(BaseTurret turret in Turrets)
+            turret.Load(content);
         base.Load(content);
     }
 
@@ -98,6 +102,15 @@ public class Ship : MovingObject
             Velocity = Velocity.Normalized() * TOP_SPEED;
         this._rectangleCollider.shape.Offset(Vector2.One * Velocity * deltaTime);
 
+
+        if (points <= 0)
+            Turret = Turrets[0];
+        else if (points <= 3)
+            Turret = Turrets[1];
+        else
+            Turret = Turrets[2];
+
+
         base.Update(gameTime);
     }
 
@@ -123,7 +136,7 @@ public class Ship : MovingObject
 
     public void Buff()
     {
-        buffTimer = buffDuration;
+        points++;
     }
 
     public Rectangle GetPosition()

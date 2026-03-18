@@ -17,14 +17,29 @@ public class LaserTurret : BaseTurret
     {
         Vector2 turretExit =
             Base.GetPosition().Center.ToVector2()
-            + RelativePosition.Rotated(Rotation)
-            + (new Vector2(0, Texture.Height) / 2f).Rotated(Rotation);
+            + RelativePosition * Rotation
+            + (new Vector2(0, Texture.Height) / -2f).Rotated(Rotation);
         GameManager
             .GetGameManager()
             .AddGameObject(
-                new Laser(new LinePieceCollider(turretExit, turretExit + Vector2.UnitY.Rotated(base.Rotation)), 700)
+                new Laser(new LinePieceCollider(turretExit, turretExit + (-Vector2.UnitY).Rotated(base.Rotation)), 700)
             );
     }
+
+    // protected override void Shoot()
+    // {
+    //     float exitSide = LastTurret ? -1f : 1f;
+    //     Vector2 turretExit =
+    //         Base.GetPosition().Center.ToVector2()
+    //         + RelativePosition * Rotation
+    //         + new Vector2(Texture.Width / 9 * exitSide, Texture.Height / -2).Rotated(
+    //             Rotation
+    //         );
+    //     GameManager
+    //         .GetGameManager()
+    //         .AddGameObject(new Bullet(turretExit, (-Vector2.UnitY).Rotated(Rotation), 1000, Base.Velocity));
+    //     LastTurret = !LastTurret;
+    // }
 
     public override void Load(ContentManager content)
     {
