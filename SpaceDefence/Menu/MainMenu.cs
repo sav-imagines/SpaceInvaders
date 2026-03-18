@@ -18,8 +18,8 @@ public class MainMenu : GameObject
     {
         var screen = new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
         buttons = [
-            new Button(() => {GameManager.GetGameManager().State = GameState.Playing;}, screen / 2 + Vector2.UnitY * screen.Y * 0.05f, "(A)  Play"),
-            new Button(() => {GameManager.GetGameManager().Game.Exit();}, screen / 2 + Vector2.UnitY * screen.Y * 0.1f, "(-)  Quit")
+            new Button(() => PlayButton(), screen / 2 + Vector2.UnitY * screen.Y * 0.05f, "(A)  Play"),
+            new Button(() => QuitButton(), screen / 2 + Vector2.UnitY * screen.Y * 0.1f, "(-)  Quit")
         ];
         textItems = [
             new Text("MAIN  MENU", new Vector2(.5f, .4f)),
@@ -63,5 +63,15 @@ public class MainMenu : GameObject
             button.Draw(gameTime, spriteBatch);
         foreach(Text text in textItems)
             text.Draw(gameTime, spriteBatch);
+    }
+
+    private void PlayButton()
+    {
+        GameManager.GetGameManager().State = GameState.Playing;
+    }
+
+    private void QuitButton()
+    {
+        GameManager.GetGameManager().Game.Exit();
     }
 }

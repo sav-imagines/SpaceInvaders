@@ -12,7 +12,7 @@ public class SpaceDefence : Game
     public SpaceDefence()
     {
         _graphics = new GraphicsDeviceManager(this);
-        _graphics.IsFullScreen = true;
+        _graphics.IsFullScreen = false;
         _graphics.PreferredBackBufferHeight = GraphicsAdapter
             .DefaultAdapter
             .CurrentDisplayMode

@@ -39,10 +39,8 @@ internal class Bullet : GameObject
 
     public override void OnCollision(GameObject other)
     {
-        if (other is Alien || other is Supply)
-        {
+        if (other is Alien)
             GameManager.GetGameManager().RemoveGameObject(this);
-        }
     }
 
     public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
