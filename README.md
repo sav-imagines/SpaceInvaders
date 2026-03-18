@@ -22,7 +22,7 @@ Use the mouse to aim and click to shoot. With the double gun, it is possible to 
 ## New assets' sources:
 | Asset                                 | Source                                 | License                  |
 | ------------------------------------- | -------------------------------------- | ------------------------ |
-| `UI/Arrow_Alien` and `UI/Arrow_Crate` | Handmade with Aseprite                 | Verbal author permission |
+| `UI/Arrow_Alien` and `UI/Arrow_Crate` | Self-made with Aseprite                 | Verbal author permission |
 | `Ship/Double_Turret`                  | https://zintoki.itch.io/space-breaker  | CC0 1.0 license          |
 | `Other/PixelFont`                     | https://github.com/IdreesInc/Monocraft | OFL-1.1 license          |
 
