@@ -29,8 +29,11 @@ internal class Bullet : GameObject
         base.Update(gameTime);
         _circleCollider.Center += _velocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
         GameManager gameManager = GameManager.GetGameManager();
-        Camera camera = gameManager.Camera;
-        if (!camera.IsOnScreen(_circleCollider))
+        Ship player = gameManager.Player;
+
+        // cull object after it reaches over 3 screen widths away from the player.
+        // this is intentional, to allow shooting "off-screen" enemies
+        if ((player.GetPosition().Center.ToVector2() - _circleCollider.Center).Length() > GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width * 3)
             GameManager.GetGameManager().RemoveGameObject(this);
     }
 

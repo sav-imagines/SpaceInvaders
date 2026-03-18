@@ -67,8 +67,11 @@ public class PausedMenu : GameObject
             text.Draw(gameTime, spriteBatch);
     }
 
-    private void ToMainMenu() =>
+    private void ToMainMenu()
+    {
+        GameManager.GetGameManager().GameOverReset();
         GameManager.GetGameManager().State = GameState.Mainmenu;
+    }
 
     private void Continue() =>
         GameManager.GetGameManager().State = GameState.Playing;

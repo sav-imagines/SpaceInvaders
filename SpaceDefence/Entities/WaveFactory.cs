@@ -28,4 +28,10 @@ public class WaveFactory
     {
         AlienCount--;
     }
+
+    public void ResetWaves()
+    {
+        WaveCount = 0;
+        AlienCount = 0;
+    }
 }

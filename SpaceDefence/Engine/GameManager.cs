@@ -95,7 +95,7 @@ namespace SpaceDefence
 
         public void CheckCollision()
         {
-            // Checks once for every pair of 2 GameObjects if the collide.
+            // Checks once for every pair of 2 GameObjects if they collide.
             for (int i = 0; i < _gameObjects.Count; i++)
             {
                 for (int j = i + 1; j < _gameObjects.Count; j++)
@@ -116,17 +116,32 @@ namespace SpaceDefence
             // Handle input
             HandleInput(InputManager);
 
-            if (!State.IsPlaying()) // the game stops running during the death screen, save for handling input
-                return;
-
-            // Update
-            foreach (GameObject gameObject in _gameObjects)
+            switch (State)
             {
-                gameObject.Update(gameTime);
+                case GameState.Playing:
+                    // Update
+                    foreach (GameObject gameObject in _gameObjects)
+                    {
+                        gameObject.Update(gameTime);
+                    }
+
+                    // Check Collission
+                    CheckCollision();
+
+                    // Update HUD
+                    HUD.gameObjects = _gameObjects;
+
+                    // Manage alien spawning
+                    if (WaveFactory.AlienCount <= 0)
+                        WaveFactory.NextWave().ForEach(obj => AddGameObject(obj));
+                    break;
+
+                default:
+                    GameStateMethods.Screens[State].Update(gameTime);
+                    break;
             }
 
-            // Check Collission
-            CheckCollision();
+            
 
             foreach (GameObject gameObject in _toBeAdded)
             {
@@ -141,10 +156,6 @@ namespace SpaceDefence
                 _gameObjects.Remove(gameObject);
             }
             _toBeRemoved.Clear();
-            HUD.gameObjects = _gameObjects;
-
-            if (WaveFactory.AlienCount <= 0)
-                WaveFactory.NextWave().ForEach(obj => AddGameObject(obj));
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -220,6 +231,17 @@ namespace SpaceDefence
             var rectangle = new Texture2D(GameManager.GetGameManager().Game.GraphicsDevice, 1, 1);
             rectangle.SetData(new[] { color });
             spriteBatch.Draw(rectangle, rect, Color.White);
+        }
+
+        public void GameOverReset()
+        {
+            WaveFactory.ResetWaves();
+            foreach (GameObject obj in _gameObjects)
+                if (obj is Alien alien)
+                    RemoveGameObject(alien);
+            Player.ResetPosition();
+            State = GameState.Playing;
+            WaveFactory.NextWave();
         }
     }
 }

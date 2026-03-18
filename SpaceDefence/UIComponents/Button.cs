@@ -6,25 +6,27 @@ using SpaceDefence.Collision;
 
 namespace SpaceDefence;
 
-public class Button : Clickable {
+public class Button : Clickable
+{
     private SpriteFont font;
     private float FONT_SCALE = 4;
 
-    public string Text {get; private set;}
-    public Action ClickHandler {get; private set;}
-    public RectangleCollider Position {get; private set;}
+    public string Text { get; private set; }
+    public Action ClickHandler { get; private set; }
+    public RectangleCollider Position { get; private set; }
 
-    public Button(Action clickHandler, Vector2 centerPosition, string text) {
+    public Button(Action clickHandler, Vector2 centerPosition, string text)
+    {
         ClickHandler = clickHandler;
         Text = text;
         Position = new RectangleCollider(new Rectangle(centerPosition.ToPoint(), Point.Zero));
     }
 
     public override void HandleInput(InputManager inputManager)
-        {
-            if (inputManager.LeftMousePress() && Position.Contains(inputManager.GetMouseScreenPosition()))
-                OnClick();
-        }
+    {
+        if (inputManager.LeftMousePress() && Position.Contains(inputManager.GetMouseScreenPosition()))
+            OnClick();
+    }
 
     public override void Load(ContentManager content)
     {

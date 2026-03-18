@@ -11,11 +11,6 @@ internal class Supply : GameObject
     private Texture2D _texture;
     private float playerClearance = 100;
 
-    public Supply()
-    {
-
-    }
-
     public override void Load(ContentManager content)
     {
         base.Load(content);
@@ -28,9 +23,11 @@ internal class Supply : GameObject
 
     public override void OnCollision(GameObject other)
     {
-        RandomMove();
         if (other is Ship)
             GameManager.GetGameManager().Player.Buff();
+        else if (other is Bullet || other is Laser)
+            return; // do not collide with bullets
+        RandomMove();
         base.OnCollision(other);
     }
 

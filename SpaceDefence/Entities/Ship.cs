@@ -18,11 +18,10 @@ public class Ship : MovingObject
     private readonly BaseTurret[] Turrets;
 
     public BaseTurret Turret;
+    public int points = 0;
 
     private Texture2D ship_body;
     private Texture2D laser_turret;
-    private float buffTimer = 0;
-    private float buffDuration = 10f;
     private RectangleCollider _rectangleCollider;
     private Point target;
 
@@ -31,7 +30,6 @@ public class Ship : MovingObject
     private float rotationAim; // the angle you are steering towards
 
     private float gasPedal;
-    private int points = 0;
 
     /// <summary>
     /// The player character
@@ -88,8 +86,6 @@ public class Ship : MovingObject
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
         Turret.Update(gameTime);
-        // Update the Buff timer
-        buffTimer -= deltaTime;
 
         rotation = rotation + MathHelper.WrapAngle(rotationAim - rotation) * deltaTime * ROTATION_SPEED;
         Turret.Rotation += MathHelper.WrapAngle(rotationAim - rotation) * deltaTime * ROTATION_SPEED;

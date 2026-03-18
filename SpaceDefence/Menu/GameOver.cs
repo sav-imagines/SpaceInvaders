@@ -15,8 +15,8 @@ public class GameOverMenu : GameObject
     {
         var screen = new Vector2(GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
         buttons = [
-            new Button(Continue, screen / 2 + Vector2.UnitY * screen.Y * 0.05f, "(A)  Respawn"),
-            new Button(ToMainMenu, screen / 2 + Vector2.UnitY * screen.Y * 0.1f, "(-)  Main  menu")
+            new Button(() => Continue(), screen / 2 + Vector2.UnitY * screen.Y * 0.05f, "(A)  Respawn"),
+            new Button(() => ToMainMenu(), screen / 2 + Vector2.UnitY * screen.Y * 0.1f, "(-)  Main  menu")
         ];
         textItems = [
             new Text("GAME  OVER", new Vector2(.5f, .4f)),
@@ -44,7 +44,6 @@ public class GameOverMenu : GameObject
 
     public override void Update(GameTime gameTime)
     {
-        base.Update(gameTime);
         foreach(Button button in buttons)
             button.Update(gameTime);
     }
@@ -67,9 +66,12 @@ public class GameOverMenu : GameObject
             text.Draw(gameTime, spriteBatch);
     }
 
-    private void ToMainMenu() =>
+    private void ToMainMenu()
+    {
+        GameManager.GetGameManager().GameOverReset();
         GameManager.GetGameManager().State = GameState.Mainmenu;
+    }
 
     private void Continue() =>
-        GameManager.GetGameManager().State = GameState.Playing;
+        GameManager.GetGameManager().GameOverReset();
 }
